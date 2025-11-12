@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Mock BizOps</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .docs-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+            padding: 3rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin: 0.5rem 0;
+        }
+
+        .sidebar-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+
+        .docs-content {
+            max-width: 800px;
+        }
+
+        .docs-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .docs-content h2 {
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .docs-content h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary-dark);
+        }
+
+        .docs-content p {
+            margin: 1rem 0;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .docs-content code {
+            background: var(--bg-light);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: var(--primary);
+            font-size: 0.9em;
+        }
+
+        .docs-content pre {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .docs-content pre code {
+            background: none;
+            color: #E3E8EE;
+            padding: 0;
+        }
+
+        .callout {
+            background: var(--bg-light);
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .callout-warning {
+            border-left-color: #FFA500;
+            background: #FFF8E1;
+        }
+
+        .callout-success {
+            border-left-color: var(--success);
+            background: #E8F5E9;
+        }
+
+        .language-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: -1px;
+        }
+
+        .language-tab {
+            padding: 0.5rem 1rem;
+            background: #1a1f36;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .language-tab.active {
+            background: var(--code-bg);
+            color: white;
+        }
+
+        .language-content {
+            display: none;
+        }
+
+        .language-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .docs-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>🚗 Mock BizOps</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="playground.html">API Playground</a></li>
+                <li><a href="index.html#pricing">Pricing</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="docs-container">
+            <aside class="sidebar">
+                <ul class="sidebar-nav">
+                    <li><a href="#introduction" class="active">Introduction</a></li>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#making-requests">Making Requests</a></li>
+                    <li><a href="#pagination">Pagination</a></li>
+                    <li><a href="#filtering">Filtering & Search</a></li>
+                    <li><a href="#errors">Error Handling</a></li>
+                    <li><a href="#rate-limits">Rate Limits</a></li>
+                    <li><a href="#examples">Code Examples</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+                <section id="introduction">
+                    <h1>Getting Started</h1>
+                    <p>Welcome to Mock BizOps! This guide will help you get started with our Car Repair Shop API in just a few minutes.</p>
+
+                    <div class="callout">
+                        <strong>What is Mock BizOps?</strong>
+                        <p>Mock BizOps provides realistic mock APIs for business operations testing. Our Car Repair Shop API includes 2,000+ work orders, 500+ customers, 750+ vehicles, and all the relationships between them.</p>
+                    </div>
+                </section>
+
+                <section id="quick-start">
+                    <h2>Quick Start</h2>
+                    <p>Get up and running in 60 seconds.</p>
+
+                    <h3>Step 1: Get Your API Key</h3>
+                    <p>For testing, you can use our public test key:</p>
+                    <pre><code>test-key-1234567890</code></pre>
+
+                    <div class="callout-warning callout">
+                        <strong>Note:</strong> This is a shared test key with rate limits. For production use, <a href="playground.html">generate your own API key</a>.
+                    </div>
+
+                    <h3>Step 2: Make Your First Request</h3>
+                    <p>Try fetching the customer list:</p>
+
+                    <div class="language-tabs">
+                        <button class="language-tab active" onclick="showLanguage('curl')">cURL</button>
+                        <button class="language-tab" onclick="showLanguage('javascript')">JavaScript</button>
+                        <button class="language-tab" onclick="showLanguage('python')">Python</button>
+                    </div>
+
+                    <div id="curl" class="language-content active">
+                        <pre><code>curl -H "X-API-Key: test-key-1234567890" \
+  https://api.mockbizops.com/v1/customers?page=1&page_size=10</code></pre>
+                    </div>
+
+                    <div id="javascript" class="language-content">
+                        <pre><code>const response = await fetch('https://api.mockbizops.com/v1/customers?page=1&page_size=10', {
+  headers: {
+    'X-API-Key': 'test-key-1234567890'
+  }
+});
+
+const data = await response.json();
+console.log(data);</code></pre>
+                    </div>
+
+                    <div id="python" class="language-content">
+                        <pre><code>import requests
+
+headers = {
+    'X-API-Key': 'test-key-1234567890'
+}
+
+response = requests.get(
+    'https://api.mockbizops.com/v1/customers',
+    headers=headers,
+    params={'page': 1, 'page_size': 10}
+)
+
+data = response.json()
+print(data)</code></pre>
+                    </div>
+
+                    <h3>Step 3: Start Building!</h3>
+                    <p>Check out the <a href="api-reference.html">API Reference</a> for all available endpoints, or try the <a href="playground.html">Interactive Playground</a>.</p>
+                </section>
+
+                <section id="authentication">
+                    <h2>Authentication</h2>
+                    <p>All API requests require authentication using an API key passed in the <code>X-API-Key</code> header.</p>
+
+                    <pre><code>X-API-Key: your-api-key-here</code></pre>
+
+                    <h3>Getting an API Key</h3>
+                    <p>You have three options:</p>
+                    <ol>
+                        <li><strong>Test Key:</strong> Use <code>test-key-1234567890</code> for trying out the API</li>
+                        <li><strong>Free Account:</strong> Sign up for a free account (10,000 requests/month)</li>
+                        <li><strong>Pro Account:</strong> Upgrade for higher limits and priority support</li>
+                    </ol>
+
+                    <div class="callout-warning callout">
+                        <strong>Security Note:</strong> Never commit API keys to version control. Use environment variables instead.
+                    </div>
+                </section>
+
+                <section id="making-requests">
+                    <h2>Making Requests</h2>
+                    <p>The API is RESTful and returns JSON responses. All endpoints are prefixed with <code>/v1</code>.</p>
+
+                    <h3>Base URL</h3>
+                    <pre><code>https://api.mockbizops.com/v1</code></pre>
+
+                    <h3>Request Headers</h3>
+                    <pre><code>X-API-Key: your-api-key
+Content-Type: application/json (for POST/PUT requests)</code></pre>
+
+                    <h3>Example Response</h3>
+                    <pre><code>{
+  "items": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "first_name": "Sarah",
+      "last_name": "Johnson",
+      "email": "sarah.johnson@example.com",
+      "phone": "(555) 123-4567",
+      "city": "San Francisco",
+      "state": "CA",
+      "customer_since": "2020-03-15"
+    }
+  ],
+  "total": 500,
+  "page": 1,
+  "page_size": 10,
+  "total_pages": 50
+}</code></pre>
+                </section>
+
+                <section id="pagination">
+                    <h2>Pagination</h2>
+                    <p>List endpoints return paginated results. Use the following query parameters:</p>
+
+                    <ul>
+                        <li><code>page</code> - Page number (default: 1)</li>
+                        <li><code>page_size</code> - Items per page (default: 20, max: 100)</li>
+                    </ul>
+
+                    <h3>Example</h3>
+                    <pre><code>GET /v1/customers?page=2&page_size=50</code></pre>
+
+                    <h3>Response Metadata</h3>
+                    <pre><code>{
+  "items": [...],
+  "total": 500,        // Total number of items
+  "page": 2,           // Current page
+  "page_size": 50,     // Items per page
+  "total_pages": 10    // Total number of pages
+}</code></pre>
+                </section>
+
+                <section id="filtering">
+                    <h2>Filtering & Search</h2>
+                    <p>Most list endpoints support filtering and search capabilities.</p>
+
+                    <h3>Search Customers</h3>
+                    <pre><code>GET /v1/customers?search=john
+GET /v1/customers?state=CA</code></pre>
+
+                    <h3>Filter Work Orders</h3>
+                    <pre><code>GET /v1/work-orders?status=completed
+GET /v1/work-orders?priority=urgent
+GET /v1/work-orders?start_date=2024-01-01&end_date=2024-12-31</code></pre>
+
+                    <h3>Filter Vehicles</h3>
+                    <pre><code>GET /v1/vehicles?make=Toyota
+GET /v1/vehicles?year=2020
+GET /v1/vehicles?make=Honda&model=Civic</code></pre>
+
+                    <h3>Sorting</h3>
+                    <pre><code>GET /v1/customers?sort_by=created_at&order=desc
+GET /v1/work-orders?sort_by=total_amount&order=asc</code></pre>
+                </section>
+
+                <section id="errors">
+                    <h2>Error Handling</h2>
+                    <p>The API uses standard HTTP status codes and returns JSON error responses.</p>
+
+                    <h3>Status Codes</h3>
+                    <ul>
+                        <li><code>200 OK</code> - Request successful</li>
+                        <li><code>400 Bad Request</code> - Invalid parameters</li>
+                        <li><code>401 Unauthorized</code> - Missing or invalid API key</li>
+                        <li><code>404 Not Found</code> - Resource not found</li>
+                        <li><code>429 Too Many Requests</code> - Rate limit exceeded</li>
+                        <li><code>500 Internal Server Error</code> - Server error</li>
+                    </ul>
+
+                    <h3>Error Response Format</h3>
+                    <pre><code>{
+  "detail": "Invalid or inactive API key"
+}</code></pre>
+                </section>
+
+                <section id="rate-limits">
+                    <h2>Rate Limits</h2>
+                    <p>Rate limits vary by plan:</p>
+
+                    <ul>
+                        <li><strong>Free:</strong> 10,000 requests/month, 10 requests/second</li>
+                        <li><strong>Pro:</strong> 500,000 requests/month, 100 requests/second</li>
+                        <li><strong>Enterprise:</strong> Unlimited, custom rate limits</li>
+                    </ul>
+
+                    <div class="callout">
+                        <strong>Rate Limit Headers:</strong>
+                        <p>Check the response headers to see your current rate limit status:</p>
+                        <pre><code>X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 9
+X-RateLimit-Reset: 1699894800</code></pre>
+                    </div>
+                </section>
+
+                <section id="examples">
+                    <h2>Code Examples</h2>
+
+                    <h3>Fetch Customer with Vehicles</h3>
+                    <div class="language-tabs">
+                        <button class="language-tab active" onclick="showExample('ex1-js')">JavaScript</button>
+                        <button class="language-tab" onclick="showExample('ex1-py')">Python</button>
+                    </div>
+
+                    <div id="ex1-js" class="language-content active">
+                        <pre><code>const API_KEY = 'your-api-key';
+const API_URL = 'https://api.mockbizops.com/v1';
+
+async function getCustomerWithVehicles(customerId) {
+  // Fetch customer details
+  const customerRes = await fetch(
+    `${API_URL}/customers/${customerId}`,
+    { headers: { 'X-API-Key': API_KEY } }
+  );
+  const customer = await customerRes.json();
+
+  // Fetch customer's vehicles
+  const vehiclesRes = await fetch(
+    `${API_URL}/customers/${customerId}/vehicles`,
+    { headers: { 'X-API-Key': API_KEY } }
+  );
+  const vehicles = await vehiclesRes.json();
+
+  return {
+    ...customer,
+    vehicles: vehicles.items
+  };
+}
+
+// Usage
+const customer = await getCustomerWithVehicles('customer-id-here');
+console.log(customer);</code></pre>
+                    </div>
+
+                    <div id="ex1-py" class="language-content">
+                        <pre><code>import requests
+
+API_KEY = 'your-api-key'
+API_URL = 'https://api.mockbizops.com/v1'
+
+def get_customer_with_vehicles(customer_id):
+    headers = {'X-API-Key': API_KEY}
+
+    # Fetch customer details
+    customer_res = requests.get(
+        f'{API_URL}/customers/{customer_id}',
+        headers=headers
+    )
+    customer = customer_res.json()
+
+    # Fetch customer's vehicles
+    vehicles_res = requests.get(
+        f'{API_URL}/customers/{customer_id}/vehicles',
+        headers=headers
+    )
+    vehicles = vehicles_res.json()
+
+    return {
+        **customer,
+        'vehicles': vehicles['items']
+    }
+
+# Usage
+customer = get_customer_with_vehicles('customer-id-here')
+print(customer)</code></pre>
+                    </div>
+
+                    <h3>Get Work Order Statistics</h3>
+                    <div class="language-tabs">
+                        <button class="language-tab active" onclick="showExample('ex2-js')">JavaScript</button>
+                        <button class="language-tab" onclick="showExample('ex2-py')">Python</button>
+                    </div>
+
+                    <div id="ex2-js" class="language-content active">
+                        <pre><code>async function getWorkOrderStats() {
+  const response = await fetch(
+    'https://api.mockbizops.com/v1/work-orders/stats',
+    {
+      headers: { 'X-API-Key': 'your-api-key' }
+    }
+  );
+
+  const stats = await response.json();
+
+  console.log(`Total Orders: ${stats.total_orders}`);
+  console.log(`Total Revenue: $${stats.total_revenue}`);
+  console.log(`Average Order: $${stats.average_order_value}`);
+
+  return stats;
+}</code></pre>
+                    </div>
+
+                    <div id="ex2-py" class="language-content">
+                        <pre><code>import requests
+
+def get_work_order_stats():
+    response = requests.get(
+        'https://api.mockbizops.com/v1/work-orders/stats',
+        headers={'X-API-Key': 'your-api-key'}
+    )
+
+    stats = response.json()
+
+    print(f"Total Orders: {stats['total_orders']}")
+    print(f"Total Revenue: ${stats['total_revenue']}")
+    print(f"Average Order: ${stats['average_order_value']}")
+
+    return stats</code></pre>
+                    </div>
+
+                    <div class="callout-success callout">
+                        <strong>Next Steps:</strong>
+                        <ul>
+                            <li>Explore the <a href="api-reference.html">complete API reference</a></li>
+                            <li>Try the <a href="playground.html">interactive playground</a></li>
+                            <li>Check out more <a href="#examples">code examples</a></li>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Mock BizOps</h4>
+                    <p>Realistic mock APIs for business operations.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                        <li><a href="playground.html">API Playground</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Mock BizOps. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        function showLanguage(lang) {
+            document.querySelectorAll('.language-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.language-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            document.getElementById(lang).classList.add('active');
+        }
+
+        function showExample(exampleId) {
+            const parent = event.target.closest('div').nextElementSibling;
+            parent.querySelectorAll('.language-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            parent.querySelector('.language-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            document.getElementById(exampleId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

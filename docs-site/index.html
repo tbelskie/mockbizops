@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock BizOps - Car Repair Shop API</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>🚗 Mock BizOps</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="playground.html">API Playground</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Realistic Business Operations Mock API</h1>
+                <p class="subtitle">Production-quality mock data for testing and development. Start building in minutes with our Car Repair Shop API.</p>
+                <div class="cta-buttons">
+                    <a href="docs.html" class="btn btn-primary">Get Started →</a>
+                    <a href="playground.html" class="btn btn-secondary">Try API Playground</a>
+                </div>
+
+                <div class="code-preview">
+                    <div class="code-header">
+                        <span>Quick Example</span>
+                        <button class="copy-btn" onclick="copyCode('hero-code')">Copy</button>
+                    </div>
+                    <pre><code id="hero-code">curl -H "X-API-Key: your-api-key" \
+  https://api.mockbizops.com/v1/customers
+
+{
+  "items": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "first_name": "Sarah",
+      "last_name": "Johnson",
+      "email": "sarah.johnson@example.com",
+      "phone": "(555) 123-4567",
+      "city": "San Francisco",
+      "state": "CA"
+    }
+  ],
+  "total": 500,
+  "page": 1
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="features">
+        <div class="container">
+            <h2>Why Mock BizOps?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Realistic Data</h3>
+                    <p>2,000+ work orders, 500+ customers, 750+ vehicles with interconnected relationships and business logic.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Production Ready</h3>
+                    <p>Built with FastAPI, PostgreSQL, and deployed on Railway. Reliable, fast, and scalable infrastructure.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔑</div>
+                    <h3>Simple Authentication</h3>
+                    <p>API key authentication with instant key generation. Start testing in under 2 minutes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>RESTful API</h3>
+                    <p>Intuitive REST endpoints with filtering, pagination, search, and sorting built-in.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Complete Documentation</h3>
+                    <p>OpenAPI/Swagger docs, code examples in multiple languages, and interactive playground.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🆓</div>
+                    <h3>Free Tier</h3>
+                    <p>Generous free tier for development and testing. No credit card required to start.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases">
+        <div class="container">
+            <h2>Perfect For</h2>
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <h3>🧪 Testing & Development</h3>
+                    <p>Build and test your frontend applications without setting up a backend. Focus on UI/UX.</p>
+                </div>
+                <div class="use-case">
+                    <h3>🎓 Learning & Tutorials</h3>
+                    <p>Teaching API integration? Use realistic business data in your courses and workshops.</p>
+                </div>
+                <div class="use-case">
+                    <h3>🎨 Prototypes & Demos</h3>
+                    <p>Create convincing demos and prototypes with real-looking data that tells a story.</p>
+                </div>
+                <div class="use-case">
+                    <h3>📊 Data Analytics</h3>
+                    <p>Practice data analysis and visualization with realistic business operations data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quick-start">
+        <div class="container">
+            <h2>Get Started in 60 Seconds</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Get Your API Key</h3>
+                    <p>Sign up for a free account and get your API key instantly.</p>
+                    <code>X-API-Key: your-api-key-here</code>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Make Your First Request</h3>
+                    <p>Try it in your terminal or use our interactive playground.</p>
+                    <code>curl -H "X-API-Key: your-key" https://api.mockbizops.com/v1/customers</code>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Start Building</h3>
+                    <p>Integrate into your app with our SDKs and code examples.</p>
+                    <code>const customers = await api.getCustomers();</code>
+                </div>
+            </div>
+            <div class="cta-center">
+                <a href="docs.html" class="btn btn-primary btn-large">Read the Documentation →</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="api-preview">
+        <div class="container">
+            <h2>Available Endpoints</h2>
+            <div class="endpoint-grid">
+                <div class="endpoint-card">
+                    <h3>👥 Customers</h3>
+                    <ul>
+                        <li><code>GET /v1/customers</code></li>
+                        <li><code>GET /v1/customers/{id}</code></li>
+                        <li><code>GET /v1/customers/{id}/vehicles</code></li>
+                        <li><code>GET /v1/customers/{id}/work-orders</code></li>
+                    </ul>
+                </div>
+                <div class="endpoint-card">
+                    <h3>🚗 Vehicles</h3>
+                    <ul>
+                        <li><code>GET /v1/vehicles</code></li>
+                        <li><code>GET /v1/vehicles/{id}</code></li>
+                        <li><code>GET /v1/vehicles/{id}/work-orders</code></li>
+                    </ul>
+                </div>
+                <div class="endpoint-card">
+                    <h3>🔧 Work Orders</h3>
+                    <ul>
+                        <li><code>GET /v1/work-orders</code></li>
+                        <li><code>GET /v1/work-orders/{id}</code></li>
+                        <li><code>GET /v1/work-orders/stats</code></li>
+                        <li><code>GET /v1/work-orders/{id}/parts</code></li>
+                    </ul>
+                </div>
+                <div class="endpoint-card">
+                    <h3>👨‍🔧 Mechanics</h3>
+                    <ul>
+                        <li><code>GET /v1/mechanics</code></li>
+                        <li><code>GET /v1/mechanics/{id}</code></li>
+                        <li><code>GET /v1/mechanics/{id}/work-orders</code></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-center" style="margin-top: 2rem;">
+                <a href="api-reference.html">View Complete API Reference →</a>
+            </p>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2>Simple, Transparent Pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul>
+                        <li>✅ 10,000 requests/month</li>
+                        <li>✅ Full API access</li>
+                        <li>✅ Community support</li>
+                        <li>✅ Interactive playground</li>
+                        <li>✅ All mock datasets</li>
+                    </ul>
+                    <a href="docs.html" class="btn btn-outline">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="badge">Most Popular</div>
+                    <h3>Pro</h3>
+                    <div class="price">$29<span>/month</span></div>
+                    <ul>
+                        <li>✅ 500,000 requests/month</li>
+                        <li>✅ Full API access</li>
+                        <li>✅ Priority support</li>
+                        <li>✅ Higher rate limits</li>
+                        <li>✅ Custom datasets (coming soon)</li>
+                    </ul>
+                    <a href="docs.html" class="btn btn-primary">Get Started</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul>
+                        <li>✅ Unlimited requests</li>
+                        <li>✅ Dedicated support</li>
+                        <li>✅ Custom mock datasets</li>
+                        <li>✅ On-premise deployment</li>
+                        <li>✅ SLA guarantee</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Mock BizOps</h4>
+                    <p>Realistic mock APIs for business operations testing and development.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                        <li><a href="playground.html">API Playground</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="docs.html">Getting Started</a></li>
+                        <li><a href="#">Code Examples</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Mock BizOps. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

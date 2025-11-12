@@ -1,0 +1,29 @@
+"""Labor item model."""
+import uuid
+from sqlalchemy import Column, String, ForeignKey, DateTime, Numeric
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from app.database import Base
+
+
+class LaborItem(Base):
+    """Labor item model."""
+
+    __tablename__ = "labor_items"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    work_order_id = Column(UUID(as_uuid=True), ForeignKey("work_orders.id", ondelete="CASCADE"), nullable=False, index=True)
+    mechanic_id = Column(UUID(as_uuid=True), ForeignKey("mechanics.id"), nullable=False, index=True)
+    description = Column(String(255), nullable=False)
+    hours = Column(Numeric(5, 2), nullable=False)
+    hourly_rate = Column(Numeric(10, 2), nullable=False)
+    total_cost = Column(Numeric(10, 2), nullable=False)  # hours * hourly_rate
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    # Relationships
+    work_order = relationship("WorkOrder", back_populates="labor_items")
+    mechanic = relationship("Mechanic", back_populates="labor_items")
+
+    def __repr__(self):
+        return f"<LaborItem {self.description}>"

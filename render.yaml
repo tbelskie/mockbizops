@@ -1,0 +1,34 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: car-repair-db
+    env: docker
+    plan: free
+    region: oregon
+    databases:
+      - name: car_repair_api
+        user: car_repair_user
+
+  # FastAPI Application
+  - type: web
+    name: car-repair-api
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: car-repair-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_API_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: CORS_ORIGINS
+        value: https://yourdomain.com
+    healthCheckPath: /health

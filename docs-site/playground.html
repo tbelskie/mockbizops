@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Playground - Mock BizOps</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .playground-container {
+            padding: 3rem 0;
+        }
+
+        .playground-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .playground-panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .param-group {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .param-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .response-container {
+            background: var(--code-bg);
+            color: #E3E8EE;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 600px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            opacity: 0.6;
+        }
+
+        @media (max-width: 968px) {
+            .playground-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>🚗 Mock BizOps</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="playground.html">API Playground</a></li>
+                <li><a href="index.html#pricing">Pricing</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container playground-container">
+        <h1>API Playground</h1>
+        <p class="subtitle">Test API endpoints interactively in your browser</p>
+
+        <div class="playground-grid">
+            <div class="playground-panel">
+                <h2>Request</h2>
+
+                <div class="form-group">
+                    <label for="apiKey">API Key</label>
+                    <input type="text" id="apiKey" value="test-key-1234567890" placeholder="your-api-key">
+                    <small style="color: var(--text-light);">Using the public test key. <a href="#get-key">Get your own key →</a></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="endpoint">Endpoint</label>
+                    <select id="endpoint" onchange="updateEndpoint()">
+                        <optgroup label="Customers">
+                            <option value="/v1/customers">GET /v1/customers</option>
+                            <option value="/v1/customers/{id}">GET /v1/customers/{id}</option>
+                        </optgroup>
+                        <optgroup label="Vehicles">
+                            <option value="/v1/vehicles">GET /v1/vehicles</option>
+                            <option value="/v1/vehicles/{id}">GET /v1/vehicles/{id}</option>
+                        </optgroup>
+                        <optgroup label="Work Orders">
+                            <option value="/v1/work-orders">GET /v1/work-orders</option>
+                            <option value="/v1/work-orders/{id}">GET /v1/work-orders/{id}</option>
+                            <option value="/v1/work-orders/stats">GET /v1/work-orders/stats</option>
+                        </optgroup>
+                        <optgroup label="Mechanics">
+                            <option value="/v1/mechanics">GET /v1/mechanics</option>
+                            <option value="/v1/mechanics/{id}">GET /v1/mechanics/{id}</option>
+                        </optgroup>
+                        <optgroup label="Parts">
+                            <option value="/v1/parts">GET /v1/parts</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="baseUrl">Base URL</label>
+                    <input type="text" id="baseUrl" value="https://api.mockbizops.com" placeholder="https://api.mockbizops.com">
+                    <small style="color: var(--text-light);">Change this to your Railway deployment URL</small>
+                </div>
+
+                <div id="pathParamsContainer"></div>
+
+                <div class="param-group">
+                    <label>Query Parameters (optional)</label>
+                    <div id="queryParams">
+                        <div class="param-row">
+                            <input type="text" placeholder="page" value="page">
+                            <input type="text" placeholder="1" value="1">
+                        </div>
+                        <div class="param-row">
+                            <input type="text" placeholder="page_size" value="page_size">
+                            <input type="text" placeholder="10" value="10">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="addQueryParam()">+ Add Parameter</button>
+                </div>
+
+                <button class="btn btn-primary btn-large" style="width: 100%; margin-top: 1rem;" onclick="makeRequest()">Send Request</button>
+            </div>
+
+            <div class="playground-panel">
+                <h2>Response <span id="statusBadge"></span></h2>
+                <div id="responseContainer" class="response-container">
+Make a request to see the response here...
+                </div>
+                <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="copyResponse()">Copy Response</button>
+            </div>
+        </div>
+
+        <div class="playground-panel" style="margin-top: 2rem;">
+            <h2 id="get-key">Get Your Own API Key</h2>
+            <p>Generate a unique API key for your application:</p>
+
+            <div class="form-group" style="max-width: 400px;">
+                <label for="keyName">API Key Name</label>
+                <input type="text" id="keyName" placeholder="My App">
+            </div>
+
+            <button class="btn btn-primary" onclick="generateApiKey()">Generate API Key</button>
+
+            <div id="newKeyContainer" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-light); border-radius: 4px;">
+                <p><strong>Your new API key:</strong></p>
+                <code id="newKeyValue" style="display: block; padding: 0.75rem; background: white; border-radius: 4px; margin: 0.5rem 0;"></code>
+                <p style="color: var(--text-light); font-size: 0.875rem;">⚠️ Save this key securely. You won't be able to see it again.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Mock BizOps</h4>
+                    <p>Realistic mock APIs for business operations.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                        <li><a href="playground.html">API Playground</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Mock BizOps. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        let lastResponse = '';
+
+        function updateEndpoint() {
+            const endpoint = document.getElementById('endpoint').value;
+            const pathParamsContainer = document.getElementById('pathParamsContainer');
+
+            // Check if endpoint has path parameters
+            if (endpoint.includes('{')) {
+                const params = endpoint.match(/\{(\w+)\}/g);
+                pathParamsContainer.innerHTML = '<div class="param-group"><label>Path Parameters</label>';
+
+                params.forEach(param => {
+                    const paramName = param.replace(/[{}]/g, '');
+                    pathParamsContainer.innerHTML += `
+                        <div class="form-group">
+                            <label>${paramName}</label>
+                            <input type="text" id="path_${paramName}" placeholder="Enter ${paramName}">
+                        </div>
+                    `;
+                });
+
+                pathParamsContainer.innerHTML += '</div>';
+            } else {
+                pathParamsContainer.innerHTML = '';
+            }
+        }
+
+        function addQueryParam() {
+            const container = document.getElementById('queryParams');
+            const newRow = document.createElement('div');
+            newRow.className = 'param-row';
+            newRow.innerHTML = `
+                <input type="text" placeholder="key">
+                <input type="text" placeholder="value">
+            `;
+            container.appendChild(newRow);
+        }
+
+        async function makeRequest() {
+            const apiKey = document.getElementById('apiKey').value;
+            const baseUrl = document.getElementById('baseUrl').value.replace(/\/$/, '');
+            let endpoint = document.getElementById('endpoint').value;
+
+            // Replace path parameters
+            const pathParams = endpoint.match(/\{(\w+)\}/g);
+            if (pathParams) {
+                pathParams.forEach(param => {
+                    const paramName = param.replace(/[{}]/g, '');
+                    const paramValue = document.getElementById(`path_${paramName}`).value;
+                    if (paramValue) {
+                        endpoint = endpoint.replace(param, paramValue);
+                    }
+                });
+            }
+
+            // Build query parameters
+            const queryParamRows = document.querySelectorAll('#queryParams .param-row');
+            const queryParams = [];
+            queryParamRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const key = inputs[0].value.trim();
+                const value = inputs[1].value.trim();
+                if (key && value) {
+                    queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+                }
+            });
+
+            const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+            const url = `${baseUrl}${endpoint}${queryString}`;
+
+            const responseContainer = document.getElementById('responseContainer');
+            const statusBadge = document.getElementById('statusBadge');
+
+            responseContainer.classList.add('loading');
+            responseContainer.textContent = 'Loading...';
+            statusBadge.innerHTML = '';
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'X-API-Key': apiKey
+                    }
+                });
+
+                const data = await response.json();
+                lastResponse = JSON.stringify(data, null, 2);
+
+                responseContainer.textContent = lastResponse;
+                responseContainer.classList.remove('loading');
+
+                if (response.ok) {
+                    statusBadge.innerHTML = `<span class="status-badge status-success">${response.status} ${response.statusText}</span>`;
+                } else {
+                    statusBadge.innerHTML = `<span class="status-badge status-error">${response.status} ${response.statusText}</span>`;
+                }
+
+            } catch (error) {
+                responseContainer.textContent = `Error: ${error.message}`;
+                responseContainer.classList.remove('loading');
+                statusBadge.innerHTML = '<span class="status-badge status-error">Error</span>';
+            }
+        }
+
+        function copyResponse() {
+            navigator.clipboard.writeText(lastResponse).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        async function generateApiKey() {
+            const keyName = document.getElementById('keyName').value || 'My App';
+            const baseUrl = document.getElementById('baseUrl').value.replace(/\/$/, '');
+            const adminKey = prompt('Enter admin API key:');
+
+            if (!adminKey) return;
+
+            try {
+                const response = await fetch(`${baseUrl}/v1/admin/api-keys`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-Key': adminKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: keyName })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('newKeyValue').textContent = data.key;
+                    document.getElementById('newKeyContainer').style.display = 'block';
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.detail || 'Failed to generate API key'}`);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        // Initialize
+        updateEndpoint();
+    </script>
+</body>
+</html>
