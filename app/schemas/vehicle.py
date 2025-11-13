@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
-from uuid import UUID
+
 
 
 class VehicleBase(BaseModel):
@@ -19,8 +19,8 @@ class VehicleBase(BaseModel):
 
 class VehicleResponse(VehicleBase):
     """Vehicle response schema."""
-    id: UUID
-    customer_id: UUID
+    id: int
+    customer_id: int
     created_at: datetime
     updated_at: datetime
 
@@ -29,8 +29,8 @@ class VehicleResponse(VehicleBase):
 
 class VehicleListResponse(BaseModel):
     """Simplified vehicle response for list views."""
-    id: UUID
-    customer_id: UUID
+    id: int
+    customer_id: int
     year: int
     make: str
     model: str

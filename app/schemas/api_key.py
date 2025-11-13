@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
-from uuid import UUID
+
 
 
 class APIKeyCreate(BaseModel):
@@ -12,7 +12,7 @@ class APIKeyCreate(BaseModel):
 
 class APIKeyResponse(BaseModel):
     """API key response schema."""
-    id: UUID
+    id: int
     key: str
     name: str
     is_active: bool
@@ -24,7 +24,7 @@ class APIKeyResponse(BaseModel):
 
 class APIKeyListResponse(BaseModel):
     """Simplified API key response for list views."""
-    id: UUID
+    id: int
     name: str
     is_active: bool
     created_at: datetime

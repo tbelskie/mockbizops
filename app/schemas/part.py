@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
-from uuid import UUID
+
 from decimal import Decimal
 
 
@@ -18,8 +18,8 @@ class PartBase(BaseModel):
 
 class PartResponse(PartBase):
     """Part response schema."""
-    id: UUID
-    work_order_id: UUID
+    id: int
+    work_order_id: int
     total_cost: Decimal
     created_at: datetime
 
@@ -28,7 +28,7 @@ class PartResponse(PartBase):
 
 class PartListResponse(BaseModel):
     """Simplified part response for list views."""
-    id: UUID
+    id: int
     part_number: str
     description: str
     quantity: int

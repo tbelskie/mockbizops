@@ -2,7 +2,7 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional
 from datetime import datetime, date
-from uuid import UUID
+
 
 
 class CustomerBase(BaseModel):
@@ -21,7 +21,7 @@ class CustomerBase(BaseModel):
 
 class CustomerResponse(CustomerBase):
     """Customer response schema."""
-    id: UUID
+    id: int
     customer_since: date
     created_at: datetime
     updated_at: datetime
@@ -31,7 +31,7 @@ class CustomerResponse(CustomerBase):
 
 class CustomerListResponse(BaseModel):
     """Simplified customer response for list views."""
-    id: UUID
+    id: int
     first_name: str
     last_name: str
     email: EmailStr

@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List
 from datetime import datetime
-from uuid import UUID
+
 from decimal import Decimal
 from app.models.mechanic import CertificationLevel
 
@@ -19,7 +19,7 @@ class MechanicBase(BaseModel):
 
 class MechanicResponse(MechanicBase):
     """Mechanic response schema."""
-    id: UUID
+    id: int
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
@@ -27,7 +27,7 @@ class MechanicResponse(MechanicBase):
 
 class MechanicListResponse(BaseModel):
     """Simplified mechanic response for list views."""
-    id: UUID
+    id: int
     first_name: str
     last_name: str
     certification_level: CertificationLevel

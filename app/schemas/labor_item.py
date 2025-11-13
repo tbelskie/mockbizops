@@ -1,7 +1,7 @@
 """Labor item schemas."""
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
-from uuid import UUID
+
 from decimal import Decimal
 
 
@@ -14,9 +14,9 @@ class LaborItemBase(BaseModel):
 
 class LaborItemResponse(LaborItemBase):
     """Labor item response schema."""
-    id: UUID
-    work_order_id: UUID
-    mechanic_id: UUID
+    id: int
+    work_order_id: int
+    mechanic_id: int
     total_cost: Decimal
     created_at: datetime
 

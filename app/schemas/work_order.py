@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from datetime import datetime
-from uuid import UUID
+
 from decimal import Decimal
 from app.models.work_order import (
     WorkOrderStatus,
@@ -25,10 +25,10 @@ class WorkOrderBase(BaseModel):
 
 class WorkOrderResponse(BaseModel):
     """Work order response schema."""
-    id: UUID
+    id: int
     work_order_number: str
-    vehicle_id: UUID
-    customer_id: UUID
+    vehicle_id: int
+    customer_id: int
     assigned_mechanic_id: Optional[UUID]
     status: WorkOrderStatus
     priority: WorkOrderPriority
@@ -54,7 +54,7 @@ class WorkOrderResponse(BaseModel):
 
 class WorkOrderListResponse(BaseModel):
     """Simplified work order response for list views."""
-    id: UUID
+    id: int
     work_order_number: str
     vehicle_year: int
     vehicle_make: str
