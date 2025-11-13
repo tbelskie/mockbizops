@@ -38,6 +38,17 @@ class PaymentMethod(str, enum.Enum):
     CHECK = "check"
 
 
+class WorkOrderType(str, enum.Enum):
+    """Work order type."""
+    ROUTINE_MAINTENANCE = "routine_maintenance"
+    STATE_INSPECTION = "state_inspection"
+    ACCIDENT_REPAIR = "accident_repair"
+    DIAGNOSTIC = "diagnostic"
+    WARRANTY_REPAIR = "warranty_repair"
+    RECALL_SERVICE = "recall_service"
+    CUSTOM = "custom"
+
+
 class WorkOrder(Base):
     """Work order model."""
 
@@ -59,6 +70,12 @@ class WorkOrder(Base):
         SQLEnum(WorkOrderPriority, name="work_order_priority", create_type=True),
         nullable=False,
         default=WorkOrderPriority.NORMAL,
+        index=True
+    )
+    work_order_type = Column(
+        SQLEnum(WorkOrderType, name="work_order_type", create_type=True),
+        nullable=False,
+        default=WorkOrderType.ROUTINE_MAINTENANCE,
         index=True
     )
 
@@ -99,6 +116,7 @@ class WorkOrder(Base):
     assigned_mechanic = relationship("Mechanic", back_populates="work_orders")
     parts = relationship("Part", back_populates="work_order", cascade="all, delete-orphan")
     labor_items = relationship("LaborItem", back_populates="work_order", cascade="all, delete-orphan")
+    service_job_associations = relationship("WorkOrderServiceJob", back_populates="work_order", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<WorkOrder {self.work_order_number}>"

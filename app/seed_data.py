@@ -15,9 +15,13 @@ from app.models import (
     CertificationLevel,
     WorkOrderStatus,
     WorkOrderPriority,
+    WorkOrderType,
     PaymentStatus,
     PaymentMethod,
-    APIKey
+    APIKey,
+    ServiceJob,
+    ServiceJobCategory,
+    WorkOrderServiceJob
 )
 
 fake = Faker()
@@ -86,6 +90,41 @@ LABOR_TASKS = [
 
 # Mechanic specialties
 SPECIALTIES = ["Engine", "Transmission", "Electrical", "Brakes", "AC", "Diagnostics"]
+
+# Service Jobs with job codes
+SERVICE_JOBS_DATA = [
+    # Maintenance
+    {"job_code": "MAINT-OIL-001", "name": "Oil Change", "description": "Standard oil and filter change", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("0.5")},
+    {"job_code": "MAINT-TIRE-001", "name": "Tire Rotation", "description": "Rotate all four tires", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("0.5")},
+    {"job_code": "MAINT-FILTER-001", "name": "Air Filter Replacement", "description": "Replace engine air filter", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("0.25")},
+    {"job_code": "MAINT-FILTER-002", "name": "Cabin Filter Replacement", "description": "Replace cabin air filter", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("0.25")},
+    {"job_code": "MAINT-FLUID-001", "name": "Coolant Flush", "description": "Drain and replace coolant", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("1.0")},
+    {"job_code": "MAINT-TRANS-001", "name": "Transmission Service", "description": "Transmission fluid and filter service", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("2.5")},
+    {"job_code": "MAINT-WIPER-001", "name": "Wiper Blade Replacement", "description": "Install new wiper blades", "category": ServiceJobCategory.MAINTENANCE, "standard_hours": Decimal("0.25")},
+
+    # Repairs
+    {"job_code": "REPAIR-BRAKE-001", "name": "Brake Pad Replacement", "description": "Replace front or rear brake pads", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("1.5")},
+    {"job_code": "REPAIR-BRAKE-002", "name": "Brake Rotor Replacement", "description": "Replace brake rotors", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("2.0")},
+    {"job_code": "REPAIR-BATTERY-001", "name": "Battery Replacement", "description": "Test and replace car battery", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("0.5")},
+    {"job_code": "REPAIR-ALT-001", "name": "Alternator Replacement", "description": "Replace alternator", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("2.5")},
+    {"job_code": "REPAIR-START-001", "name": "Starter Replacement", "description": "Replace starter motor", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("2.0")},
+    {"job_code": "REPAIR-COOL-001", "name": "Water Pump Replacement", "description": "Replace water pump", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("3.0")},
+    {"job_code": "REPAIR-TIMING-001", "name": "Timing Belt Service", "description": "Replace timing belt and related components", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("4.5")},
+    {"job_code": "REPAIR-SPARK-001", "name": "Spark Plug Replacement", "description": "Replace spark plugs", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("1.5")},
+    {"job_code": "REPAIR-TIRE-001", "name": "Tire Replacement", "description": "Mount and balance new tires", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("1.0")},
+    {"job_code": "REPAIR-RAD-001", "name": "Radiator Replacement", "description": "Replace radiator", "category": ServiceJobCategory.REPAIR, "standard_hours": Decimal("3.5")},
+
+    # Inspections
+    {"job_code": "INSP-STATE-001", "name": "State Safety Inspection", "description": "Complete state-required safety inspection", "category": ServiceJobCategory.INSPECTION, "standard_hours": Decimal("0.5")},
+    {"job_code": "INSP-MULTIPOINT-001", "name": "Multi-Point Inspection", "description": "Comprehensive vehicle inspection", "category": ServiceJobCategory.INSPECTION, "standard_hours": Decimal("0.75")},
+    {"job_code": "INSP-PRETRIP-001", "name": "Pre-Trip Inspection", "description": "Inspection before long trip", "category": ServiceJobCategory.INSPECTION, "standard_hours": Decimal("1.0")},
+
+    # Diagnostics
+    {"job_code": "DIAG-ENGINE-001", "name": "Engine Diagnostic", "description": "Diagnose engine problems", "category": ServiceJobCategory.DIAGNOSTIC, "standard_hours": Decimal("1.0")},
+    {"job_code": "DIAG-ELEC-001", "name": "Electrical Diagnostic", "description": "Diagnose electrical issues", "category": ServiceJobCategory.DIAGNOSTIC, "standard_hours": Decimal("1.5")},
+    {"job_code": "DIAG-TRANS-001", "name": "Transmission Diagnostic", "description": "Diagnose transmission issues", "category": ServiceJobCategory.DIAGNOSTIC, "standard_hours": Decimal("1.5")},
+    {"job_code": "DIAG-CHECK-001", "name": "Check Engine Light Diagnostic", "description": "Diagnose check engine light", "category": ServiceJobCategory.DIAGNOSTIC, "standard_hours": Decimal("1.0")},
+]
 
 
 def generate_vin():
@@ -166,6 +205,27 @@ def create_mechanics(db: Session, count: int = 50):
     return mechanics
 
 
+def create_service_jobs(db: Session):
+    """Create predefined service jobs."""
+    print(f"Creating {len(SERVICE_JOBS_DATA)} service jobs...")
+    service_jobs = []
+
+    for job_data in SERVICE_JOBS_DATA:
+        service_job = ServiceJob(
+            job_code=job_data["job_code"],
+            name=job_data["name"],
+            description=job_data["description"],
+            category=job_data["category"],
+            standard_hours=job_data["standard_hours"]
+        )
+        service_jobs.append(service_job)
+
+    db.add_all(service_jobs)
+    db.commit()
+    print(f"Created {len(service_jobs)} service jobs")
+    return service_jobs
+
+
 def create_vehicles(db: Session, customers: list, count: int = 750):
     """Create vehicle records."""
     print(f"Creating {count} vehicles...")
@@ -205,9 +265,9 @@ def create_vehicles(db: Session, customers: list, count: int = 750):
     return vehicles
 
 
-def create_work_orders_with_details(db: Session, vehicles: list, customers: list, mechanics: list, count: int = 2000):
-    """Create work orders with parts and labor."""
-    print(f"Creating {count} work orders with parts and labor...")
+def create_work_orders_with_details(db: Session, vehicles: list, customers: list, mechanics: list, service_jobs: list, count: int = 2000):
+    """Create work orders with parts, labor, and service jobs."""
+    print(f"Creating {count} work orders with parts, labor, and service jobs...")
 
     work_orders = []
     all_parts = []
@@ -258,6 +318,12 @@ def create_work_orders_with_details(db: Session, vehicles: list, customers: list
             weights=[0.2, 0.5, 0.2, 0.1]  # low, normal, high, urgent
         )[0]
 
+        # Assign work order type
+        work_order_type = random.choices(
+            list(WorkOrderType),
+            weights=[0.40, 0.15, 0.15, 0.10, 0.10, 0.05, 0.05]  # routine_maintenance, state_inspection, accident_repair, diagnostic, warranty_repair, recall_service, custom
+        )[0]
+
         # Generate description and concern
         concerns = [
             "Vehicle making strange noise",
@@ -298,6 +364,7 @@ def create_work_orders_with_details(db: Session, vehicles: list, customers: list
             assigned_mechanic_id=mechanic.id,
             status=status,
             priority=priority,
+            work_order_type=work_order_type,
             description=description,
             customer_concern=customer_concern,
             diagnosis=diagnosis,
@@ -394,12 +461,52 @@ def create_work_orders_with_details(db: Session, vehicles: list, customers: list
         work_order.payment_status = payment_status
         work_order.payment_method = payment_method
 
-    # Commit all parts and labor
+    # Now link service jobs to work orders
+    print("Linking service jobs to work orders...")
+    all_wo_service_jobs = []
+    for work_order in work_orders:
+        # Assign 1-3 service jobs per work order based on work_order_type
+        num_jobs = random.randint(1, 3)
+
+        # Filter service jobs based on work order type
+        if work_order.work_order_type == WorkOrderType.STATE_INSPECTION:
+            available_jobs = [j for j in service_jobs if "INSP" in j.job_code]
+        elif work_order.work_order_type == WorkOrderType.DIAGNOSTIC:
+            available_jobs = [j for j in service_jobs if "DIAG" in j.job_code]
+        elif work_order.work_order_type == WorkOrderType.ROUTINE_MAINTENANCE:
+            available_jobs = [j for j in service_jobs if "MAINT" in j.job_code]
+        else:
+            # For other types, use repair jobs or mix
+            available_jobs = [j for j in service_jobs if "REPAIR" in j.job_code or "MAINT" in j.job_code]
+
+        # Fallback if no jobs match
+        if not available_jobs:
+            available_jobs = service_jobs
+
+        # Pick random service jobs
+        selected_jobs = random.sample(available_jobs, min(num_jobs, len(available_jobs)))
+
+        for service_job in selected_jobs:
+            # Actual hours can vary from standard hours
+            hours_variance = Decimal(str(random.uniform(-0.5, 0.5)))
+            hours_actual = max(Decimal("0.1"), service_job.standard_hours + hours_variance)
+            hours_actual = round(hours_actual, 2)
+
+            wo_service_job = WorkOrderServiceJob(
+                work_order_id=work_order.id,
+                service_job_id=service_job.id,
+                hours_actual=hours_actual,
+                notes=fake.sentence() if random.random() > 0.7 else None
+            )
+            all_wo_service_jobs.append(wo_service_job)
+
+    # Commit all parts, labor, and service jobs
     db.add_all(all_parts)
     db.add_all(all_labor)
+    db.add_all(all_wo_service_jobs)
     db.commit()
 
-    print(f"Created {count} work orders with {len(all_parts)} parts and {len(all_labor)} labor items")
+    print(f"Created {count} work orders with {len(all_parts)} parts, {len(all_labor)} labor items, and {len(all_wo_service_jobs)} service job links")
     return work_orders
 
 
@@ -442,6 +549,7 @@ def seed_database():
         # Check what data already exists
         existing_customers = db.query(Customer).count()
         existing_mechanics = db.query(Mechanic).count()
+        existing_service_jobs = db.query(ServiceJob).count()
         existing_vehicles = db.query(Vehicle).count()
         existing_work_orders = db.query(WorkOrder).count()
         existing_api_keys = db.query(APIKey).count()
@@ -449,6 +557,7 @@ def seed_database():
         print(f"Current database state:")
         print(f"  - Customers: {existing_customers}")
         print(f"  - Mechanics: {existing_mechanics}")
+        print(f"  - Service Jobs: {existing_service_jobs}")
         print(f"  - Vehicles: {existing_vehicles}")
         print(f"  - Work Orders: {existing_work_orders}")
         print(f"  - API Keys: {existing_api_keys}")
@@ -468,6 +577,13 @@ def seed_database():
             print(f"Skipping mechanics (already exist)")
             mechanics = db.query(Mechanic).all()
 
+        if existing_service_jobs == 0:
+            print("Creating service jobs...")
+            service_jobs = create_service_jobs(db)
+        else:
+            print(f"Skipping service jobs (already exist)")
+            service_jobs = db.query(ServiceJob).all()
+
         if existing_vehicles == 0:
             print("Creating vehicles...")
             vehicles = create_vehicles(db, customers, 750)
@@ -476,8 +592,8 @@ def seed_database():
             vehicles = db.query(Vehicle).all()
 
         if existing_work_orders == 0:
-            print("Creating work orders with parts and labor...")
-            work_orders = create_work_orders_with_details(db, vehicles, customers, mechanics, 2000)
+            print("Creating work orders with parts, labor, and service jobs...")
+            work_orders = create_work_orders_with_details(db, vehicles, customers, mechanics, service_jobs, 2000)
         else:
             print(f"Skipping work orders (already exist)")
             work_orders = db.query(WorkOrder).all()

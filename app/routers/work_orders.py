@@ -10,7 +10,7 @@ import math
 
 from app.database import get_db
 from app.auth import get_api_key
-from app.models import WorkOrder, Vehicle, Customer, Mechanic, Part, LaborItem, WorkOrderStatus, WorkOrderPriority, PaymentStatus
+from app.models import WorkOrder, Vehicle, Customer, Mechanic, Part, LaborItem, WorkOrderStatus, WorkOrderPriority, PaymentStatus, WorkOrderType
 from app.schemas import (
     WorkOrderResponse,
     WorkOrderListResponse,
@@ -31,6 +31,7 @@ async def list_work_orders(
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     status: Optional[WorkOrderStatus] = Query(None, description="Filter by status"),
     priority: Optional[WorkOrderPriority] = Query(None, description="Filter by priority"),
+    work_order_type: Optional[WorkOrderType] = Query(None, description="Filter by work order type"),
     payment_status: Optional[PaymentStatus] = Query(None, description="Filter by payment status"),
     start_date: Optional[datetime] = Query(None, description="Filter by start date"),
     end_date: Optional[datetime] = Query(None, description="Filter by end date"),
@@ -58,6 +59,8 @@ async def list_work_orders(
         query = query.filter(WorkOrder.status == status)
     if priority:
         query = query.filter(WorkOrder.priority == priority)
+    if work_order_type:
+        query = query.filter(WorkOrder.work_order_type == work_order_type)
     if payment_status:
         query = query.filter(WorkOrder.payment_status == payment_status)
     if start_date:
@@ -90,6 +93,7 @@ async def list_work_orders(
             customer_last_name=row.customer_last_name,
             status=work_order.status,
             priority=work_order.priority,
+            work_order_type=work_order.work_order_type,
             total_amount=work_order.total_amount,
             payment_status=work_order.payment_status,
             created_at=work_order.created_at

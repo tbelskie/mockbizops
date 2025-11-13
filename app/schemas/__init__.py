@@ -12,6 +12,11 @@ from app.schemas.work_order import (
     WorkOrderStatsResponse
 )
 from app.schemas.api_key import APIKeyCreate, APIKeyResponse, APIKeyListResponse
+from app.schemas.service_job import (
+    ServiceJobResponse,
+    ServiceJobListResponse,
+    WorkOrderServiceJobResponse
+)
 
 __all__ = [
     "PaginatedResponse",
@@ -33,4 +38,7 @@ __all__ = [
     "APIKeyCreate",
     "APIKeyResponse",
     "APIKeyListResponse",
+    "ServiceJobResponse",
+    "ServiceJobListResponse",
+    "WorkOrderServiceJobResponse",
 ]

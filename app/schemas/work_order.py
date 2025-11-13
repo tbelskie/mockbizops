@@ -8,7 +8,8 @@ from app.models.work_order import (
     WorkOrderStatus,
     WorkOrderPriority,
     PaymentStatus,
-    PaymentMethod
+    PaymentMethod,
+    WorkOrderType
 )
 from app.schemas.part import PartResponse
 from app.schemas.labor_item import LaborItemResponse
@@ -32,6 +33,7 @@ class WorkOrderResponse(BaseModel):
     assigned_mechanic_id: Optional[int]
     status: WorkOrderStatus
     priority: WorkOrderPriority
+    work_order_type: WorkOrderType
     description: str
     customer_concern: str
     diagnosis: Optional[str]
@@ -63,6 +65,7 @@ class WorkOrderListResponse(BaseModel):
     customer_last_name: str
     status: WorkOrderStatus
     priority: WorkOrderPriority
+    work_order_type: WorkOrderType
     total_amount: Decimal
     payment_status: PaymentStatus
     created_at: datetime
@@ -74,6 +77,7 @@ class WorkOrderDetailResponse(WorkOrderResponse):
     """Detailed work order response with parts and labor."""
     parts: List[PartResponse] = []
     labor_items: List[LaborItemResponse] = []
+    service_jobs: List['WorkOrderServiceJobResponse'] = []
     # Customer info
     customer_first_name: str
     customer_last_name: str
@@ -89,6 +93,11 @@ class WorkOrderDetailResponse(WorkOrderResponse):
     mechanic_last_name: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Import here to avoid circular dependency
+from app.schemas.service_job import WorkOrderServiceJobResponse
+WorkOrderDetailResponse.model_rebuild()
 
 
 class WorkOrderStatsResponse(BaseModel):
