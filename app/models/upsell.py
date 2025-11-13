@@ -30,10 +30,6 @@ class Upsell(Base):
     estimated_amount = Column(Numeric(10, 2), nullable=False)  # Initial estimate
     actual_amount = Column(Numeric(10, 2), nullable=True)  # Final amount if completed
 
-    # Commission tracking
-    commission_rate = Column(Numeric(5, 4), nullable=False, default=0.10)  # Default 10%
-    commission_amount = Column(Numeric(10, 2), nullable=True)  # Calculated commission
-
     # Status tracking
     status = Column(
         SQLEnum(UpsellStatus, name="upsell_status", create_type=True),
@@ -59,12 +55,3 @@ class Upsell(Base):
 
     def __repr__(self):
         return f"<Upsell {self.id} - WO:{self.work_order_id} - {self.status}>"
-
-    def calculate_commission(self):
-        """Calculate commission based on actual or estimated amount."""
-        amount = self.actual_amount if self.actual_amount else self.estimated_amount
-        if amount and self.status in [UpsellStatus.APPROVED, UpsellStatus.COMPLETED]:
-            self.commission_amount = amount * self.commission_rate
-        else:
-            self.commission_amount = None
-        return self.commission_amount

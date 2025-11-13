@@ -13,7 +13,6 @@ from app.schemas import (
     UpsellListResponse,
     UpsellCreate,
     UpsellUpdateStatus,
-    MechanicCommissionSummary,
     PaginatedResponse
 )
 from app.utils import paginate, create_paginated_response
@@ -180,69 +179,7 @@ async def update_upsell_status(
     if update_data.notes is not None:
         upsell.notes = update_data.notes
 
-    # Calculate commission
-    upsell.calculate_commission()
-
     db.commit()
     db.refresh(upsell)
 
     return upsell
-
-
-@router.get("/mechanic/{mechanic_id}/commission-summary", response_model=MechanicCommissionSummary)
-async def get_mechanic_commission_summary(
-    mechanic_id: int,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(get_api_key)
-):
-    """Get commission summary for a mechanic."""
-    mechanic = db.query(Mechanic).filter(Mechanic.id == mechanic_id).first()
-
-    if not mechanic:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Mechanic with ID {mechanic_id} not found"
-        )
-
-    # Get upsell statistics
-    total_proposed = db.query(func.count(Upsell.id)).filter(
-        Upsell.recommended_by_mechanic_id == mechanic_id
-    ).scalar()
-
-    total_approved = db.query(func.count(Upsell.id)).filter(
-        Upsell.recommended_by_mechanic_id == mechanic_id,
-        Upsell.status.in_([UpsellStatus.APPROVED, UpsellStatus.COMPLETED])
-    ).scalar()
-
-    total_completed = db.query(func.count(Upsell.id)).filter(
-        Upsell.recommended_by_mechanic_id == mechanic_id,
-        Upsell.status == UpsellStatus.COMPLETED
-    ).scalar()
-
-    # Calculate commissions
-    total_commission = db.query(func.coalesce(func.sum(Upsell.commission_amount), 0)).filter(
-        Upsell.recommended_by_mechanic_id == mechanic_id,
-        Upsell.status == UpsellStatus.COMPLETED
-    ).scalar()
-
-    pending_commission = db.query(func.coalesce(func.sum(Upsell.commission_amount), 0)).filter(
-        Upsell.recommended_by_mechanic_id == mechanic_id,
-        Upsell.status == UpsellStatus.APPROVED
-    ).scalar()
-
-    # Calculate approval rate
-    approval_rate = Decimal("0")
-    if total_proposed > 0:
-        approval_rate = Decimal(str((total_approved / total_proposed) * 100))
-
-    return MechanicCommissionSummary(
-        mechanic_id=mechanic.id,
-        mechanic_first_name=mechanic.first_name,
-        mechanic_last_name=mechanic.last_name,
-        total_upsells_proposed=total_proposed,
-        total_upsells_approved=total_approved,
-        total_upsells_completed=total_completed,
-        approval_rate=round(approval_rate, 2),
-        total_commission_earned=Decimal(str(total_commission)),
-        pending_commission=Decimal(str(pending_commission))
-    )

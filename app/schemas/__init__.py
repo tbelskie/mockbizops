@@ -21,8 +21,7 @@ from app.schemas.upsell import (
     UpsellResponse,
     UpsellListResponse,
     UpsellCreate,
-    UpsellUpdateStatus,
-    MechanicCommissionSummary
+    UpsellUpdateStatus
 )
 
 __all__ = [
@@ -52,5 +51,4 @@ __all__ = [
     "UpsellListResponse",
     "UpsellCreate",
     "UpsellUpdateStatus",
-    "MechanicCommissionSummary",
 ]

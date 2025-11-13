@@ -612,9 +612,6 @@ def create_upsells(db: Session, work_orders: list, mechanics: list):
                 actual_amount = upsell_info["amount"] * (Decimal("1.0") + variance)
                 actual_amount = round(actual_amount, 2)
 
-            # Commission rate varies (10-15%)
-            commission_rate = Decimal(str(random.uniform(0.10, 0.15)))
-
             upsell = Upsell(
                 work_order_id=work_order.id,
                 recommended_by_mechanic_id=recommending_mechanic,
@@ -622,16 +619,12 @@ def create_upsells(db: Session, work_orders: list, mechanics: list):
                 reason=upsell_info["reason"],
                 estimated_amount=upsell_info["amount"],
                 actual_amount=actual_amount,
-                commission_rate=round(commission_rate, 4),
                 status=status,
                 proposed_at=proposed_at,
                 approved_at=approved_at,
                 completed_at=completed_at,
                 notes=fake.sentence() if random.random() > 0.7 else None
             )
-
-            # Calculate commission
-            upsell.calculate_commission()
 
             upsells.append(upsell)
 

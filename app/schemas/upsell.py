@@ -11,7 +11,6 @@ class UpsellBase(BaseModel):
     description: str = Field(..., min_length=1)
     reason: Optional[str] = None
     estimated_amount: Decimal = Field(..., ge=0, decimal_places=2)
-    commission_rate: Decimal = Field(default=Decimal("0.10"), ge=0, le=1, decimal_places=4)
 
 
 class UpsellCreate(UpsellBase):
@@ -26,7 +25,6 @@ class UpsellResponse(UpsellBase):
     work_order_id: int
     recommended_by_mechanic_id: int
     actual_amount: Optional[Decimal]
-    commission_amount: Optional[Decimal]
     status: UpsellStatus
     proposed_at: datetime
     approved_at: Optional[datetime]
@@ -48,7 +46,6 @@ class UpsellListResponse(BaseModel):
     description: str
     estimated_amount: Decimal
     actual_amount: Optional[Decimal]
-    commission_amount: Optional[Decimal]
     status: UpsellStatus
     proposed_at: datetime
 
@@ -60,18 +57,3 @@ class UpsellUpdateStatus(BaseModel):
     status: UpsellStatus
     actual_amount: Optional[Decimal] = None
     notes: Optional[str] = None
-
-
-class MechanicCommissionSummary(BaseModel):
-    """Summary of mechanic's upsell commissions."""
-    mechanic_id: int
-    mechanic_first_name: str
-    mechanic_last_name: str
-    total_upsells_proposed: int
-    total_upsells_approved: int
-    total_upsells_completed: int
-    approval_rate: Decimal  # percentage
-    total_commission_earned: Decimal
-    pending_commission: Decimal  # approved but not completed
-
-    model_config = ConfigDict(from_attributes=True)
