@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional
-from uuid import UUID
+
 from datetime import datetime
 from decimal import Decimal
 import math
@@ -147,7 +147,7 @@ async def get_work_order_stats(
 
 @router.get("/{work_order_id}", response_model=WorkOrderDetailResponse)
 async def get_work_order(
-    work_order_id: UUID,
+    work_order_id: int,
     db: Session = Depends(get_db),
     api_key: str = Depends(get_api_key)
 ):
@@ -229,7 +229,7 @@ async def get_work_order(
 
 @router.get("/{work_order_id}/parts", response_model=PaginatedResponse[PartResponse])
 async def get_work_order_parts(
-    work_order_id: UUID,
+    work_order_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
@@ -254,7 +254,7 @@ async def get_work_order_parts(
 
 @router.get("/{work_order_id}/labor", response_model=PaginatedResponse[LaborItemResponse])
 async def get_work_order_labor(
-    work_order_id: UUID,
+    work_order_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),

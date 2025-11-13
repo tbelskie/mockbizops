@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from typing import Optional
-from uuid import UUID
+
 
 from app.database import get_db
 from app.auth import get_api_key

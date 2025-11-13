@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 from typing import Optional
-from uuid import UUID
+
 
 from app.database import get_db
 from app.auth import get_api_key
@@ -65,7 +65,7 @@ async def list_customers(
 
 @router.get("/{customer_id}", response_model=CustomerResponse)
 async def get_customer(
-    customer_id: UUID,
+    customer_id: int,
     db: Session = Depends(get_db),
     api_key: str = Depends(get_api_key)
 ):
@@ -83,7 +83,7 @@ async def get_customer(
 
 @router.get("/{customer_id}/vehicles", response_model=PaginatedResponse[VehicleListResponse])
 async def get_customer_vehicles(
-    customer_id: UUID,
+    customer_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
@@ -108,7 +108,7 @@ async def get_customer_vehicles(
 
 @router.get("/{customer_id}/work-orders", response_model=PaginatedResponse[WorkOrderListResponse])
 async def get_customer_work_orders(
-    customer_id: UUID,
+    customer_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),

@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
-from uuid import UUID
+
 import math
 
 from app.database import get_db
@@ -58,7 +58,7 @@ async def list_mechanics(
 
 @router.get("/{mechanic_id}", response_model=MechanicResponse)
 async def get_mechanic(
-    mechanic_id: UUID,
+    mechanic_id: int,
     db: Session = Depends(get_db),
     api_key: str = Depends(get_api_key)
 ):
@@ -76,7 +76,7 @@ async def get_mechanic(
 
 @router.get("/{mechanic_id}/work-orders", response_model=PaginatedResponse[WorkOrderListResponse])
 async def get_mechanic_work_orders(
-    mechanic_id: UUID,
+    mechanic_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
