@@ -31,8 +31,5 @@ class ServiceJob(Base):
     standard_hours = Column(Numeric(5, 2), nullable=False)  # Typical time to complete
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-    # Relationships
-    work_order_associations = relationship("WorkOrderServiceJob", back_populates="service_job")
-
     def __repr__(self):
         return f"<ServiceJob {self.job_code} - {self.name}>"
