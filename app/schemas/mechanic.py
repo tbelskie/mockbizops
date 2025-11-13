@@ -32,6 +32,7 @@ class MechanicListResponse(BaseModel):
     last_name: str
     certification_level: CertificationLevel
     specialties: List[str]
+    hourly_rate: Decimal
     is_active: bool
 
     model_config = ConfigDict(from_attributes=True)

@@ -81,7 +81,7 @@ Should each developer get their own isolated dataset, or should all developers s
 
 4. **Documentation-Friendly**:
    - Can provide specific IDs in examples
-   - "Try this customer: `550e8400-...`" works for everyone
+   - "Try this customer: `1`" works for everyone
    - Easier to write tutorials
    - Consistent across all docs
 
@@ -177,10 +177,10 @@ Example:
 // Developer explores once
 const customers = await api.getCustomers();
 console.log(customers.items[0].id);
-// "550e8400-e29b-41d4-a716-446655440000"
+// 1
 
 // Then uses that ID throughout their app
-const customer = await api.getCustomer("550e8400-...");
+const customer = await api.getCustomer(1);
 // Always returns same customer - stable!
 ```
 
@@ -351,6 +351,7 @@ This allows docs site to call API from browser.
 ### API Keys
 
 **Format**: UUID strings (e.g., `550e8400-e29b-41d4-a716-446655440000`)
+**Note**: API keys themselves are UUIDs for security. Database record IDs (customers, vehicles, work orders, etc.) use simple auto-incrementing integers (1, 2, 3, ...).
 
 **Storage**: PostgreSQL table with:
 - key (unique)

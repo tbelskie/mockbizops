@@ -293,7 +293,7 @@ fetch(`${BASE_URL}/customers`, { headers })
   .then(data => console.log(data));
 
 // Get work order details
-const workOrderId = 'some-uuid';
+const workOrderId = 1;
 fetch(`${BASE_URL}/work-orders/${workOrderId}`, { headers })
   .then(res => res.json())
   .then(data => console.log(data));
