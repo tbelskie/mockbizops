@@ -635,7 +635,6 @@ def seed_database():
         print(f"  - Service Jobs: {len(service_jobs)}")
         print(f"  - Vehicles: {len(vehicles)}")
         print(f"  - Work Orders: {len(work_orders)}")
-        print(f"  - Upsells: {len(upsells)}")
         print(f"  - API Keys: {len(api_keys)}")
         print("\nTest API Keys:")
         for key in api_keys:
