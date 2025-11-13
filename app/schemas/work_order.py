@@ -71,6 +71,13 @@ class WorkOrderListResponse(BaseModel):
     status: WorkOrderStatus
     priority: WorkOrderPriority
     work_order_type: WorkOrderType
+    labor_hours: Optional[Decimal]
+    service_job_ids: Optional[List[int]]
+    additional_service_job_ids: Optional[List[int]]
+    subtotal_parts: Decimal
+    subtotal_labor: Decimal
+    service_jobs_cost: Decimal
+    additional_jobs_cost: Decimal
     total_amount: Decimal
     payment_status: PaymentStatus
     created_at: datetime
