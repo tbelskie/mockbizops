@@ -76,7 +76,6 @@ async def list_upsells(
             description=upsell.description,
             estimated_amount=upsell.estimated_amount,
             actual_amount=upsell.actual_amount,
-            commission_amount=upsell.commission_amount,
             status=upsell.status,
             proposed_at=upsell.proposed_at
         ))
@@ -134,7 +133,6 @@ async def create_upsell(
         description=upsell_data.description,
         reason=upsell_data.reason,
         estimated_amount=upsell_data.estimated_amount,
-        commission_rate=upsell_data.commission_rate,
         status=UpsellStatus.PROPOSED
     )
 
