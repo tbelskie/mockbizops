@@ -439,21 +439,55 @@ def seed_database():
     db = SessionLocal()
 
     try:
-        # Check if data already exists
+        # Check what data already exists
         existing_customers = db.query(Customer).count()
-        if existing_customers > 0:
-            print(f"Database already contains {existing_customers} customers.")
-            response = input("Do you want to continue and add more data? (yes/no): ")
-            if response.lower() not in ['yes', 'y']:
-                print("Seeding cancelled.")
-                return
+        existing_mechanics = db.query(Mechanic).count()
+        existing_vehicles = db.query(Vehicle).count()
+        existing_work_orders = db.query(WorkOrder).count()
+        existing_api_keys = db.query(APIKey).count()
 
-        # Create data
-        customers = create_customers(db, 500)
-        mechanics = create_mechanics(db, 50)
-        vehicles = create_vehicles(db, customers, 750)
-        work_orders = create_work_orders_with_details(db, vehicles, customers, mechanics, 2000)
-        api_keys = create_initial_api_keys(db)
+        print(f"Current database state:")
+        print(f"  - Customers: {existing_customers}")
+        print(f"  - Mechanics: {existing_mechanics}")
+        print(f"  - Vehicles: {existing_vehicles}")
+        print(f"  - Work Orders: {existing_work_orders}")
+        print(f"  - API Keys: {existing_api_keys}")
+
+        # Only create missing data
+        if existing_customers == 0:
+            print("Creating customers...")
+            customers = create_customers(db, 500)
+        else:
+            print(f"Skipping customers (already exist)")
+            customers = db.query(Customer).all()
+
+        if existing_mechanics == 0:
+            print("Creating mechanics...")
+            mechanics = create_mechanics(db, 50)
+        else:
+            print(f"Skipping mechanics (already exist)")
+            mechanics = db.query(Mechanic).all()
+
+        if existing_vehicles == 0:
+            print("Creating vehicles...")
+            vehicles = create_vehicles(db, customers, 750)
+        else:
+            print(f"Skipping vehicles (already exist)")
+            vehicles = db.query(Vehicle).all()
+
+        if existing_work_orders == 0:
+            print("Creating work orders with parts and labor...")
+            work_orders = create_work_orders_with_details(db, vehicles, customers, mechanics, 2000)
+        else:
+            print(f"Skipping work orders (already exist)")
+            work_orders = db.query(WorkOrder).all()
+
+        if existing_api_keys == 0:
+            print("Creating API keys...")
+            api_keys = create_initial_api_keys(db)
+        else:
+            print(f"Skipping API keys (already exist)")
+            api_keys = db.query(APIKey).all()
 
         print("=" * 50)
         print("Database seeding completed successfully!")
