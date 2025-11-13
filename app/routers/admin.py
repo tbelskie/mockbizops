@@ -79,3 +79,31 @@ async def revoke_api_key(
     db.commit()
 
     return None
+
+
+@router.post("/seed", status_code=status.HTTP_200_OK)
+async def seed_database(
+    db: Session = Depends(get_db),
+    admin_key: str = Depends(get_admin_api_key)
+):
+    """
+    Seed the database with mock data (admin only).
+
+    Requires admin API key in X-API-Key header.
+    This will populate the database with sample customers, vehicles, work orders, etc.
+    """
+    from app.seed_data import seed_database as run_seed
+
+    try:
+        # Run the seed function
+        run_seed()
+
+        return {
+            "status": "success",
+            "message": "Database seeded successfully"
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to seed database: {str(e)}"
+        )

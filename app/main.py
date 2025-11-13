@@ -82,11 +82,48 @@ async def root():
 @app.get("/health", tags=["health"])
 async def health_check():
     """Health check endpoint."""
-    return {
-        "status": "healthy",
-        "version": settings.VERSION,
-        "environment": settings.ENVIRONMENT
-    }
+    from app.database import SessionLocal, engine
+    from sqlalchemy import text
+
+    # Check database connection and tables
+    try:
+        db = SessionLocal()
+        result = db.execute(text("""
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+            ORDER BY table_name
+        """))
+        tables = [row[0] for row in result]
+
+        # Count records in each table
+        counts = {}
+        for table in tables:
+            count_result = db.execute(text(f"SELECT COUNT(*) FROM {table}"))
+            counts[table] = count_result.scalar()
+
+        db.close()
+
+        return {
+            "status": "healthy",
+            "version": settings.VERSION,
+            "environment": settings.ENVIRONMENT,
+            "database": {
+                "connected": True,
+                "tables": tables,
+                "record_counts": counts
+            }
+        }
+    except Exception as e:
+        return {
+            "status": "healthy",
+            "version": settings.VERSION,
+            "environment": settings.ENVIRONMENT,
+            "database": {
+                "connected": False,
+                "error": str(e)
+            }
+        }
 
 
 @app.get(f"{settings.API_V1_PREFIX}/", include_in_schema=False)
