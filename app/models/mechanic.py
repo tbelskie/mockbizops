@@ -1,7 +1,6 @@
 """Mechanic model."""
-import uuid
-from sqlalchemy import Column, String, Boolean, Numeric, DateTime, Enum as SQLEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, Integer, String, Boolean, Numeric, DateTime, Enum as SQLEnum
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -20,7 +19,7 @@ class Mechanic(Base):
 
     __tablename__ = "mechanics"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     certification_level = Column(

@@ -1,7 +1,5 @@
 """API Key model."""
-import uuid
-from sqlalchemy import Column, String, Boolean, DateTime
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.sql import func
 from app.database import Base
 
@@ -11,7 +9,7 @@ class APIKey(Base):
 
     __tablename__ = "api_keys"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     key = Column(String(100), nullable=False, unique=True, index=True)
     name = Column(String(255), nullable=False)  # Description/name of the key
     is_active = Column(Boolean, nullable=False, default=True, index=True)

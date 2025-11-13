@@ -1,7 +1,5 @@
 """Work order model."""
-import uuid
 from sqlalchemy import Column, String, Text, Integer, ForeignKey, DateTime, Numeric, Enum as SQLEnum
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -45,11 +43,11 @@ class WorkOrder(Base):
 
     __tablename__ = "work_orders"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     work_order_number = Column(String(50), nullable=False, unique=True, index=True)
-    vehicle_id = Column(UUID(as_uuid=True), ForeignKey("vehicles.id", ondelete="CASCADE"), nullable=False, index=True)
-    customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id", ondelete="CASCADE"), nullable=False, index=True)
-    assigned_mechanic_id = Column(UUID(as_uuid=True), ForeignKey("mechanics.id"), nullable=True, index=True)
+    vehicle_id = Column(Integer, ForeignKey("vehicles.id", ondelete="CASCADE"), nullable=False, index=True)
+    customer_id = Column(Integer, ForeignKey("customers.id", ondelete="CASCADE"), nullable=False, index=True)
+    assigned_mechanic_id = Column(Integer, ForeignKey("mechanics.id"), nullable=True, index=True)
 
     status = Column(
         SQLEnum(WorkOrderStatus, name="work_order_status", create_type=True),

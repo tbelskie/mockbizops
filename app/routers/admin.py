@@ -107,3 +107,33 @@ async def seed_database(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to seed database: {str(e)}"
         )
+
+
+@router.post("/reset-database", status_code=status.HTTP_200_OK)
+async def reset_database(
+    admin_key: str = Depends(get_admin_api_key)
+):
+    """
+    Drop all tables and recreate them (admin only).
+
+    WARNING: This will delete ALL data in the database!
+    Requires admin API key in X-API-Key header.
+    """
+    from app.database import Base, engine
+
+    try:
+        # Drop all tables
+        Base.metadata.drop_all(bind=engine)
+
+        # Recreate all tables
+        Base.metadata.create_all(bind=engine)
+
+        return {
+            "status": "success",
+            "message": "Database reset successfully. All tables dropped and recreated."
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to reset database: {str(e)}"
+        )
