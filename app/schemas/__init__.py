@@ -17,6 +17,13 @@ from app.schemas.service_job import (
     ServiceJobListResponse,
     WorkOrderServiceJobResponse
 )
+from app.schemas.upsell import (
+    UpsellResponse,
+    UpsellListResponse,
+    UpsellCreate,
+    UpsellUpdateStatus,
+    MechanicCommissionSummary
+)
 
 __all__ = [
     "PaginatedResponse",
@@ -41,4 +48,9 @@ __all__ = [
     "ServiceJobResponse",
     "ServiceJobListResponse",
     "WorkOrderServiceJobResponse",
+    "UpsellResponse",
+    "UpsellListResponse",
+    "UpsellCreate",
+    "UpsellUpdateStatus",
+    "MechanicCommissionSummary",
 ]

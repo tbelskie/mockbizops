@@ -117,6 +117,7 @@ class WorkOrder(Base):
     parts = relationship("Part", back_populates="work_order", cascade="all, delete-orphan")
     labor_items = relationship("LaborItem", back_populates="work_order", cascade="all, delete-orphan")
     service_job_associations = relationship("WorkOrderServiceJob", back_populates="work_order", cascade="all, delete-orphan")
+    upsells = relationship("Upsell", back_populates="work_order", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<WorkOrder {self.work_order_number}>"

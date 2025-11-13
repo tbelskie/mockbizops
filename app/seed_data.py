@@ -21,7 +21,9 @@ from app.models import (
     APIKey,
     ServiceJob,
     ServiceJobCategory,
-    WorkOrderServiceJob
+    WorkOrderServiceJob,
+    Upsell,
+    UpsellStatus
 )
 
 fake = Faker()
@@ -533,6 +535,112 @@ def create_initial_api_keys(db: Session):
     return api_keys
 
 
+def create_upsells(db: Session, work_orders: list, mechanics: list):
+    """Create upsells for work orders."""
+    print("Creating upsells...")
+    upsells = []
+
+    # Common upsell descriptions
+    upsell_options = [
+        {"description": "Replace worn brake rotors", "reason": "Current rotors are warped and below minimum thickness", "amount": Decimal("250.00")},
+        {"description": "Transmission fluid flush and filter", "reason": "Fluid is dark and contaminated", "amount": Decimal("180.00")},
+        {"description": "Replace cabin air filter", "reason": "Filter is clogged and reducing AC efficiency", "amount": Decimal("45.00")},
+        {"description": "Replace engine air filter", "reason": "Filter is dirty and restricting airflow", "amount": Decimal("35.00")},
+        {"description": "Replace serpentine belt", "reason": "Belt shows signs of cracking and wear", "amount": Decimal("120.00")},
+        {"description": "Coolant system flush", "reason": "Coolant is rusty and needs replacement", "amount": Decimal("140.00")},
+        {"description": "Replace spark plugs", "reason": "Plugs are worn and causing misfires", "amount": Decimal("160.00")},
+        {"description": "Replace battery", "reason": "Battery is weak and may fail soon", "amount": Decimal("185.00")},
+        {"description": "Wheel alignment", "reason": "Tires showing uneven wear", "amount": Decimal("95.00")},
+        {"description": "Replace wiper blades", "reason": "Blades are worn and streaking", "amount": Decimal("40.00")},
+        {"description": "Fuel system cleaning", "reason": "Improve fuel efficiency and engine performance", "amount": Decimal("135.00")},
+        {"description": "Tire rotation and balance", "reason": "Extend tire life and improve ride quality", "amount": Decimal("65.00")},
+        {"description": "Replace timing belt", "reason": "Belt is at recommended mileage interval", "amount": Decimal("650.00")},
+        {"description": "Replace shocks and struts", "reason": "Suspension is worn and affecting ride quality", "amount": Decimal("850.00")},
+        {"description": "Brake fluid flush", "reason": "Fluid is old and may cause brake fade", "amount": Decimal("110.00")},
+    ]
+
+    # Generate upsells for about 30% of work orders
+    for work_order in work_orders:
+        # Only create upsells for orders that aren't cancelled
+        if work_order.status == WorkOrderStatus.CANCELLED:
+            continue
+
+        # 30% chance of having an upsell
+        if random.random() > 0.30:
+            continue
+
+        # Pick 1-2 upsell items
+        num_upsells = random.randint(1, 2)
+
+        for _ in range(num_upsells):
+            upsell_info = random.choice(upsell_options)
+
+            # Randomly assign to the assigned mechanic or another mechanic
+            recommending_mechanic = work_order.assigned_mechanic_id if random.random() > 0.2 else random.choice(mechanics).id
+
+            # Determine status based on work order age
+            days_old = (datetime.now() - work_order.created_at).days
+
+            if days_old > 7:
+                # Older work orders have resolved upsells
+                status = random.choices(
+                    [UpsellStatus.APPROVED, UpsellStatus.DECLINED, UpsellStatus.COMPLETED],
+                    weights=[0.15, 0.35, 0.50]  # 50% completed, 15% approved, 35% declined
+                )[0]
+            else:
+                # Recent work orders are still proposed or just approved
+                status = random.choices(
+                    [UpsellStatus.PROPOSED, UpsellStatus.APPROVED, UpsellStatus.DECLINED],
+                    weights=[0.40, 0.40, 0.20]
+                )[0]
+
+            # Set timestamps based on status
+            proposed_at = work_order.created_at
+            approved_at = None
+            completed_at = None
+
+            if status in [UpsellStatus.APPROVED, UpsellStatus.COMPLETED]:
+                approved_at = proposed_at + timedelta(hours=random.randint(1, 24))
+
+            if status == UpsellStatus.COMPLETED:
+                completed_at = approved_at + timedelta(hours=random.randint(2, 48))
+
+            # Actual amount for completed upsells (may vary from estimate)
+            actual_amount = None
+            if status == UpsellStatus.COMPLETED:
+                variance = Decimal(str(random.uniform(-0.1, 0.15)))  # -10% to +15% variance
+                actual_amount = upsell_info["amount"] * (Decimal("1.0") + variance)
+                actual_amount = round(actual_amount, 2)
+
+            # Commission rate varies (10-15%)
+            commission_rate = Decimal(str(random.uniform(0.10, 0.15)))
+
+            upsell = Upsell(
+                work_order_id=work_order.id,
+                recommended_by_mechanic_id=recommending_mechanic,
+                description=upsell_info["description"],
+                reason=upsell_info["reason"],
+                estimated_amount=upsell_info["amount"],
+                actual_amount=actual_amount,
+                commission_rate=round(commission_rate, 4),
+                status=status,
+                proposed_at=proposed_at,
+                approved_at=approved_at,
+                completed_at=completed_at,
+                notes=fake.sentence() if random.random() > 0.7 else None
+            )
+
+            # Calculate commission
+            upsell.calculate_commission()
+
+            upsells.append(upsell)
+
+    db.add_all(upsells)
+    db.commit()
+    print(f"Created {len(upsells)} upsells")
+    return upsells
+
+
 def seed_database():
     """Main function to seed the database."""
     print("Starting database seed...")
@@ -552,6 +660,7 @@ def seed_database():
         existing_service_jobs = db.query(ServiceJob).count()
         existing_vehicles = db.query(Vehicle).count()
         existing_work_orders = db.query(WorkOrder).count()
+        existing_upsells = db.query(Upsell).count()
         existing_api_keys = db.query(APIKey).count()
 
         print(f"Current database state:")
@@ -560,6 +669,7 @@ def seed_database():
         print(f"  - Service Jobs: {existing_service_jobs}")
         print(f"  - Vehicles: {existing_vehicles}")
         print(f"  - Work Orders: {existing_work_orders}")
+        print(f"  - Upsells: {existing_upsells}")
         print(f"  - API Keys: {existing_api_keys}")
 
         # Only create missing data
@@ -598,6 +708,13 @@ def seed_database():
             print(f"Skipping work orders (already exist)")
             work_orders = db.query(WorkOrder).all()
 
+        if existing_upsells == 0:
+            print("Creating upsells...")
+            upsells = create_upsells(db, work_orders, mechanics)
+        else:
+            print(f"Skipping upsells (already exist)")
+            upsells = db.query(Upsell).all()
+
         if existing_api_keys == 0:
             print("Creating API keys...")
             api_keys = create_initial_api_keys(db)
@@ -610,8 +727,10 @@ def seed_database():
         print(f"Summary:")
         print(f"  - Customers: {len(customers)}")
         print(f"  - Mechanics: {len(mechanics)}")
+        print(f"  - Service Jobs: {len(service_jobs)}")
         print(f"  - Vehicles: {len(vehicles)}")
         print(f"  - Work Orders: {len(work_orders)}")
+        print(f"  - Upsells: {len(upsells)}")
         print(f"  - API Keys: {len(api_keys)}")
         print("\nTest API Keys:")
         for key in api_keys:

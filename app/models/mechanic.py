@@ -35,6 +35,7 @@ class Mechanic(Base):
     # Relationships
     work_orders = relationship("WorkOrder", back_populates="assigned_mechanic")
     labor_items = relationship("LaborItem", back_populates="mechanic")
+    upsells_recommended = relationship("Upsell", back_populates="recommended_by")
 
     def __repr__(self):
         return f"<Mechanic {self.first_name} {self.last_name} ({self.certification_level})>"

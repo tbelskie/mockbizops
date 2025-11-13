@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from app.config import settings
 from app.database import init_db
-from app.routers import customers, vehicles, work_orders, parts, mechanics, admin, service_jobs
+from app.routers import customers, vehicles, work_orders, parts, mechanics, admin, service_jobs, upsells
 
 # Initialize database tables
 init_db()
@@ -71,6 +71,7 @@ app.include_router(work_orders.router, prefix=settings.API_V1_PREFIX)
 app.include_router(parts.router, prefix=settings.API_V1_PREFIX)
 app.include_router(mechanics.router, prefix=settings.API_V1_PREFIX)
 app.include_router(service_jobs.router, prefix=settings.API_V1_PREFIX)
+app.include_router(upsells.router, prefix=settings.API_V1_PREFIX)
 app.include_router(admin.router, prefix=settings.API_V1_PREFIX)
 
 
