@@ -14,14 +14,7 @@ from app.schemas.work_order import (
 from app.schemas.api_key import APIKeyCreate, APIKeyResponse, APIKeyListResponse
 from app.schemas.service_job import (
     ServiceJobResponse,
-    ServiceJobListResponse,
-    WorkOrderServiceJobResponse
-)
-from app.schemas.upsell import (
-    UpsellResponse,
-    UpsellListResponse,
-    UpsellCreate,
-    UpsellUpdateStatus
+    ServiceJobListResponse
 )
 
 __all__ = [
@@ -46,9 +39,4 @@ __all__ = [
     "APIKeyListResponse",
     "ServiceJobResponse",
     "ServiceJobListResponse",
-    "WorkOrderServiceJobResponse",
-    "UpsellResponse",
-    "UpsellListResponse",
-    "UpsellCreate",
-    "UpsellUpdateStatus",
 ]

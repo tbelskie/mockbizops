@@ -1,5 +1,6 @@
 """Work order model."""
 from sqlalchemy import Column, String, Text, Integer, ForeignKey, DateTime, Numeric, Enum as SQLEnum
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -89,9 +90,16 @@ class WorkOrder(Base):
     odometer_in = Column(Integer, nullable=False)
     odometer_out = Column(Integer, nullable=True)
 
+    # Service job tracking
+    labor_hours = Column(Numeric(5, 2), nullable=True)  # Total hours worked by mechanic
+    service_job_ids = Column(ARRAY(Integer), nullable=True)  # Original service job codes
+    additional_service_job_ids = Column(ARRAY(Integer), nullable=True)  # Upsold service jobs
+
     # Financial fields
     subtotal_parts = Column(Numeric(10, 2), nullable=False, default=0.00)
     subtotal_labor = Column(Numeric(10, 2), nullable=False, default=0.00)
+    service_jobs_cost = Column(Numeric(10, 2), nullable=False, default=0.00)  # Cost of original services
+    additional_jobs_cost = Column(Numeric(10, 2), nullable=False, default=0.00)  # Cost of upsold services
     tax_rate = Column(Numeric(5, 4), nullable=False, default=0.08)
     tax_amount = Column(Numeric(10, 2), nullable=False, default=0.00)
     total_amount = Column(Numeric(10, 2), nullable=False, default=0.00)
@@ -116,8 +124,6 @@ class WorkOrder(Base):
     assigned_mechanic = relationship("Mechanic", back_populates="work_orders")
     parts = relationship("Part", back_populates="work_order", cascade="all, delete-orphan")
     labor_items = relationship("LaborItem", back_populates="work_order", cascade="all, delete-orphan")
-    service_job_associations = relationship("WorkOrderServiceJob", back_populates="work_order", cascade="all, delete-orphan")
-    upsells = relationship("Upsell", back_populates="work_order", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<WorkOrder {self.work_order_number}>"

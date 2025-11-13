@@ -32,16 +32,3 @@ class ServiceJobListResponse(BaseModel):
     standard_hours: Decimal
 
     model_config = ConfigDict(from_attributes=True)
-
-
-class WorkOrderServiceJobResponse(BaseModel):
-    """Work order service job association response."""
-    id: int
-    service_job_id: int
-    job_code: str
-    job_name: str
-    category: ServiceJobCategory
-    hours_actual: Decimal
-    notes: Optional[str] = None
-
-    model_config = ConfigDict(from_attributes=True)

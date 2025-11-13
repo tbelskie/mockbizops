@@ -14,8 +14,6 @@ from app.models.part import Part
 from app.models.labor_item import LaborItem
 from app.models.api_key import APIKey
 from app.models.service_job import ServiceJob, ServiceJobCategory
-from app.models.work_order_service_job import WorkOrderServiceJob
-from app.models.upsell import Upsell, UpsellStatus
 
 __all__ = [
     "Customer",
@@ -33,7 +31,4 @@ __all__ = [
     "APIKey",
     "ServiceJob",
     "ServiceJobCategory",
-    "WorkOrderServiceJob",
-    "Upsell",
-    "UpsellStatus",
 ]

@@ -41,8 +41,13 @@ class WorkOrderResponse(BaseModel):
     actual_completion: Optional[datetime]
     odometer_in: int
     odometer_out: Optional[int]
+    labor_hours: Optional[Decimal]
+    service_job_ids: Optional[List[int]]
+    additional_service_job_ids: Optional[List[int]]
     subtotal_parts: Decimal
     subtotal_labor: Decimal
+    service_jobs_cost: Decimal
+    additional_jobs_cost: Decimal
     tax_rate: Decimal
     tax_amount: Decimal
     total_amount: Decimal
@@ -77,7 +82,6 @@ class WorkOrderDetailResponse(WorkOrderResponse):
     """Detailed work order response with parts and labor."""
     parts: List[PartResponse] = []
     labor_items: List[LaborItemResponse] = []
-    service_jobs: List['WorkOrderServiceJobResponse'] = []
     # Customer info
     customer_first_name: str
     customer_last_name: str
@@ -93,11 +97,6 @@ class WorkOrderDetailResponse(WorkOrderResponse):
     mechanic_last_name: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
-
-
-# Import here to avoid circular dependency
-from app.schemas.service_job import WorkOrderServiceJobResponse
-WorkOrderDetailResponse.model_rebuild()
 
 
 class WorkOrderStatsResponse(BaseModel):
