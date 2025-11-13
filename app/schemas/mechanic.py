@@ -26,7 +26,7 @@ class MechanicResponse(MechanicBase):
 
 
 class MechanicListResponse(BaseModel):
-    """Simplified mechanic response for list views."""
+    """Mechanic response for list views - includes all fields."""
     id: int
     first_name: str
     last_name: str
@@ -34,5 +34,6 @@ class MechanicListResponse(BaseModel):
     specialties: List[str]
     hourly_rate: Decimal
     is_active: bool
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
