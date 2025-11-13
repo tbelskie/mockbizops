@@ -1,6 +1,6 @@
 """Seed database with realistic mock data."""
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from faker import Faker
 from sqlalchemy.orm import Session
@@ -579,7 +579,7 @@ def create_upsells(db: Session, work_orders: list, mechanics: list):
             recommending_mechanic = work_order.assigned_mechanic_id if random.random() > 0.2 else random.choice(mechanics).id
 
             # Determine status based on work order age
-            days_old = (datetime.now() - work_order.created_at).days
+            days_old = (datetime.now(timezone.utc) - work_order.created_at).days
 
             if days_old > 7:
                 # Older work orders have resolved upsells
