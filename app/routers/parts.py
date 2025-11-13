@@ -17,7 +17,7 @@ router = APIRouter(prefix="/parts", tags=["parts"])
 async def list_parts(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
-    work_order_id: Optional[UUID] = Query(None, description="Filter by work order ID"),
+    work_order_id: Optional[int] = Query(None, description="Filter by work order ID"),
     part_number: Optional[str] = Query(None, description="Filter by part number"),
     supplier: Optional[str] = Query(None, description="Filter by supplier"),
     sort_by: str = Query("created_at", description="Sort field"),

@@ -29,7 +29,7 @@ class WorkOrderResponse(BaseModel):
     work_order_number: str
     vehicle_id: int
     customer_id: int
-    assigned_mechanic_id: Optional[UUID]
+    assigned_mechanic_id: Optional[int]
     status: WorkOrderStatus
     priority: WorkOrderPriority
     description: str
