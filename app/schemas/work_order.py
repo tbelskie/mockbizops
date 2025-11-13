@@ -60,17 +60,22 @@ class WorkOrderResponse(BaseModel):
 
 
 class WorkOrderListResponse(BaseModel):
-    """Simplified work order response for list views."""
+    """Work order response for list views - includes all fields."""
     id: int
     work_order_number: str
-    vehicle_year: int
-    vehicle_make: str
-    vehicle_model: str
-    customer_first_name: str
-    customer_last_name: str
+    vehicle_id: int
+    customer_id: int
+    assigned_mechanic_id: Optional[int]
     status: WorkOrderStatus
     priority: WorkOrderPriority
     work_order_type: WorkOrderType
+    description: str
+    customer_concern: str
+    diagnosis: Optional[str]
+    estimated_completion: Optional[datetime]
+    actual_completion: Optional[datetime]
+    odometer_in: int
+    odometer_out: Optional[int]
     labor_hours: Optional[Decimal]
     service_job_ids: Optional[List[int]]
     additional_service_job_ids: Optional[List[int]]
@@ -78,9 +83,19 @@ class WorkOrderListResponse(BaseModel):
     subtotal_labor: Decimal
     service_jobs_cost: Decimal
     additional_jobs_cost: Decimal
+    tax_rate: Decimal
+    tax_amount: Decimal
     total_amount: Decimal
     payment_status: PaymentStatus
+    payment_method: Optional[PaymentMethod]
     created_at: datetime
+    updated_at: datetime
+    # Joined fields for convenience
+    vehicle_year: int
+    vehicle_make: str
+    vehicle_model: str
+    customer_first_name: str
+    customer_last_name: str
 
     model_config = ConfigDict(from_attributes=True)
 
