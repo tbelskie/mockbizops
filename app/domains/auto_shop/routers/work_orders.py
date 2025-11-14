@@ -10,8 +10,8 @@ import math
 
 from app.database import get_db
 from app.auth import get_api_key
-from app.models import WorkOrder, Vehicle, Customer, Mechanic, Part, LaborItem, WorkOrderStatus, WorkOrderPriority, PaymentStatus, WorkOrderType
-from app.schemas import (
+from app.domains.auto_shop.models import WorkOrder, Vehicle, Customer, Mechanic, Part, LaborItem, WorkOrderStatus, WorkOrderPriority, PaymentStatus, WorkOrderType
+from app.domains.auto_shop.schemas import (
     WorkOrderResponse,
     WorkOrderListResponse,
     WorkOrderDetailResponse,

@@ -6,8 +6,8 @@ from typing import Optional
 
 from app.database import get_db
 from app.auth import get_api_key
-from app.models import Part
-from app.schemas import PartResponse, PaginatedResponse
+from app.domains.auto_shop.models import Part
+from app.domains.auto_shop.schemas import PartResponse, PaginatedResponse
 from app.utils import paginate, create_paginated_response
 
 router = APIRouter(prefix="/parts", tags=["parts"])

@@ -5,7 +5,7 @@ from decimal import Decimal
 from faker import Faker
 from sqlalchemy.orm import Session
 from app.database import SessionLocal, init_db
-from app.models import (
+from app.domains.auto_shop.models import (
     Customer,
     Vehicle,
     Mechanic,

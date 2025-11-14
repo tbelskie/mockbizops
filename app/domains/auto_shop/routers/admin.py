@@ -5,8 +5,8 @@ from uuid import uuid4
 
 from app.database import get_db
 from app.auth import get_admin_api_key
-from app.models import APIKey
-from app.schemas import APIKeyCreate, APIKeyResponse, APIKeyListResponse
+from app.domains.auto_shop.models import APIKey
+from app.domains.auto_shop.schemas import APIKeyCreate, APIKeyResponse, APIKeyListResponse
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -92,7 +92,7 @@ async def seed_database(
     Requires admin API key in X-API-Key header.
     This will populate the database with sample customers, vehicles, work orders, etc.
     """
-    from app.seed_data import seed_database as run_seed
+    from app.domains.auto_shop.seed_data import seed_database as run_seed
 
     try:
         # Run the seed function

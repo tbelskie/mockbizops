@@ -1,4 +1,4 @@
-"""Mechanics API endpoints."""
+"""Vehicle API endpoints."""
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -7,44 +7,43 @@ import math
 
 from app.database import get_db
 from app.auth import get_api_key
-from app.models import Mechanic, WorkOrder, Vehicle, Customer, CertificationLevel
-from app.schemas import (
-    MechanicResponse,
-    MechanicListResponse,
+from app.domains.auto_shop.models import Vehicle, Customer, WorkOrder
+from app.domains.auto_shop.schemas import (
+    VehicleResponse,
+    VehicleListResponse,
     WorkOrderListResponse,
     PaginatedResponse
 )
 from app.utils import paginate, create_paginated_response
 
-router = APIRouter(prefix="/mechanics", tags=["mechanics"])
+router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
 
-@router.get("", response_model=PaginatedResponse[MechanicListResponse])
-async def list_mechanics(
+@router.get("", response_model=PaginatedResponse[VehicleListResponse])
+async def list_vehicles(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
-    is_active: Optional[bool] = Query(None, description="Filter by active status"),
-    certification_level: Optional[CertificationLevel] = Query(None, description="Filter by certification level"),
-    specialty: Optional[str] = Query(None, description="Filter by specialty"),
+    make: Optional[str] = Query(None, description="Filter by make"),
+    model: Optional[str] = Query(None, description="Filter by model"),
+    year: Optional[int] = Query(None, description="Filter by year"),
     sort_by: str = Query("created_at", description="Sort field"),
     order: str = Query("desc", regex="^(asc|desc)$", description="Sort order"),
     db: Session = Depends(get_db),
     api_key: str = Depends(get_api_key)
 ):
-    """List all mechanics with pagination and filtering."""
-    query = db.query(Mechanic)
+    """List all vehicles with pagination and filtering."""
+    query = db.query(Vehicle)
 
     # Apply filters
-    if is_active is not None:
-        query = query.filter(Mechanic.is_active == is_active)
-    if certification_level:
-        query = query.filter(Mechanic.certification_level == certification_level)
-    if specialty:
-        # Filter by specialty in JSONB array
-        query = query.filter(Mechanic.specialties.contains([specialty]))
+    if make:
+        query = query.filter(Vehicle.make.ilike(f"%{make}%"))
+    if model:
+        query = query.filter(Vehicle.model.ilike(f"%{model}%"))
+    if year:
+        query = query.filter(Vehicle.year == year)
 
     # Apply sorting
-    sort_column = getattr(Mechanic, sort_by, Mechanic.created_at)
+    sort_column = getattr(Vehicle, sort_by, Vehicle.created_at)
     if order == "desc":
         query = query.order_by(sort_column.desc())
     else:
@@ -56,39 +55,39 @@ async def list_mechanics(
     return create_paginated_response(items, total, page, page_size, total_pages)
 
 
-@router.get("/{mechanic_id}", response_model=MechanicResponse)
-async def get_mechanic(
-    mechanic_id: int,
+@router.get("/{vehicle_id}", response_model=VehicleResponse)
+async def get_vehicle(
+    vehicle_id: int,
     db: Session = Depends(get_db),
     api_key: str = Depends(get_api_key)
 ):
-    """Get a specific mechanic by ID."""
-    mechanic = db.query(Mechanic).filter(Mechanic.id == mechanic_id).first()
+    """Get a specific vehicle by ID."""
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
 
-    if not mechanic:
+    if not vehicle:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Mechanic with ID {mechanic_id} not found"
+            detail=f"Vehicle with ID {vehicle_id} not found"
         )
 
-    return mechanic
+    return vehicle
 
 
-@router.get("/{mechanic_id}/work-orders", response_model=PaginatedResponse[WorkOrderListResponse])
-async def get_mechanic_work_orders(
-    mechanic_id: int,
+@router.get("/{vehicle_id}/work-orders", response_model=PaginatedResponse[WorkOrderListResponse])
+async def get_vehicle_work_orders(
+    vehicle_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
     api_key: str = Depends(get_api_key)
 ):
-    """Get all work orders assigned to a specific mechanic."""
-    # Check if mechanic exists
-    mechanic = db.query(Mechanic).filter(Mechanic.id == mechanic_id).first()
-    if not mechanic:
+    """Get service history (work orders) for a specific vehicle."""
+    # Check if vehicle exists
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
+    if not vehicle:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Mechanic with ID {mechanic_id} not found"
+            detail=f"Vehicle with ID {vehicle_id} not found"
         )
 
     query = db.query(
@@ -103,7 +102,7 @@ async def get_mechanic_work_orders(
     ).join(
         Customer, WorkOrder.customer_id == Customer.id
     ).filter(
-        WorkOrder.assigned_mechanic_id == mechanic_id
+        WorkOrder.vehicle_id == vehicle_id
     ).order_by(
         WorkOrder.created_at.desc()
     )

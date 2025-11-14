@@ -7,8 +7,8 @@ from typing import Optional
 
 from app.database import get_db
 from app.auth import get_api_key
-from app.models import Customer, Vehicle, WorkOrder
-from app.schemas import (
+from app.domains.auto_shop.models import Customer, Vehicle, WorkOrder
+from app.domains.auto_shop.schemas import (
     CustomerResponse,
     CustomerListResponse,
     VehicleListResponse,

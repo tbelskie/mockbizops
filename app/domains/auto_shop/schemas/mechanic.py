@@ -4,7 +4,7 @@ from typing import List
 from datetime import datetime
 
 from decimal import Decimal
-from app.models.mechanic import CertificationLevel
+from app.domains.auto_shop.models.mechanic import CertificationLevel
 
 
 class MechanicBase(BaseModel):

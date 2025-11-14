@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import update
 from sqlalchemy.sql import func
 from app.database import get_db
-from app.models.api_key import APIKey
+from app.domains.auto_shop.models.api_key import APIKey
 from app.config import settings
 
 # API key header

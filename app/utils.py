@@ -1,7 +1,7 @@
 """Utility functions."""
 from typing import List, TypeVar, Generic
 from sqlalchemy.orm import Query
-from app.schemas.common import PaginatedResponse
+from app.domains.auto_shop.schemas.common import PaginatedResponse
 from app.config import settings
 import math
 

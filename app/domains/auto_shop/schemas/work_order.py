@@ -4,15 +4,15 @@ from typing import Optional, List
 from datetime import datetime
 
 from decimal import Decimal
-from app.models.work_order import (
+from app.domains.auto_shop.models.work_order import (
     WorkOrderStatus,
     WorkOrderPriority,
     PaymentStatus,
     PaymentMethod,
     WorkOrderType
 )
-from app.schemas.part import PartResponse
-from app.schemas.labor_item import LaborItemResponse
+from app.domains.auto_shop.schemas.part import PartResponse
+from app.domains.auto_shop.schemas.labor_item import LaborItemResponse
 
 
 class WorkOrderBase(BaseModel):

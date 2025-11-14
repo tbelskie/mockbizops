@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from app.config import settings
 from app.database import init_db
-from app.routers import customers, vehicles, work_orders, parts, mechanics, admin, service_jobs
+from app.domains.auto_shop.routers import customers, vehicles, work_orders, parts, mechanics, admin, service_jobs
+from app.domains.marketing.routers import influencers, campaigns, promo_codes, influencer_payouts
 
 # Initialize database tables
 init_db()
@@ -14,18 +15,25 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description="""
-    ## Car Repair Shop Mock API
+    ## MockBizOps - Multi-Domain Mock API Platform
 
-    A production-quality mock API service that provides realistic car repair shop business operations data
+    A production-quality mock API service providing realistic business operations data across multiple domains
     for developers to use in testing and development.
 
-    ### Features
+    ### Auto Shop Domain
     - 🚗 **Customers**: Manage customer information and history
     - 🔧 **Vehicles**: Track vehicle details and service history
     - 📋 **Work Orders**: Comprehensive repair order management
     - 🛠️ **Mechanics**: Mechanic profiles and certifications
     - 📦 **Parts**: Parts inventory and pricing
-    - 🔑 **API Key Authentication**: Secure access control
+    - 🔧 **Service Jobs**: Predefined service types and job codes
+
+    ### Marketing Domain (Good Bogey Golf Apparel)
+    - 👥 **Influencers**: Influencer/contractor profiles and social media data
+    - 📢 **Campaigns**: Meta Marketing API-style ad campaigns
+    - 🎟️ **Promo Codes**: Discount codes and usage tracking
+    - 💰 **Influencer Payouts**: Commission and payment tracking
+    - 📊 **Ad Insights**: Campaign performance metrics
 
     ### Authentication
     All endpoints require an API key. Include your API key in the `X-API-Key` header.
@@ -64,7 +72,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Include auto shop routers
 app.include_router(customers.router, prefix=settings.API_V1_PREFIX)
 app.include_router(vehicles.router, prefix=settings.API_V1_PREFIX)
 app.include_router(work_orders.router, prefix=settings.API_V1_PREFIX)
@@ -72,6 +80,12 @@ app.include_router(parts.router, prefix=settings.API_V1_PREFIX)
 app.include_router(mechanics.router, prefix=settings.API_V1_PREFIX)
 app.include_router(service_jobs.router, prefix=settings.API_V1_PREFIX)
 app.include_router(admin.router, prefix=settings.API_V1_PREFIX)
+
+# Include marketing routers
+app.include_router(influencers.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
+app.include_router(campaigns.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
+app.include_router(promo_codes.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
+app.include_router(influencer_payouts.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
 
 
 @app.get("/", include_in_schema=False)

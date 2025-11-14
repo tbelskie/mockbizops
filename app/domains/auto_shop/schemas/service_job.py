@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 from decimal import Decimal
-from app.models.service_job import ServiceJobCategory
+from app.domains.auto_shop.models.service_job import ServiceJobCategory
 
 
 class ServiceJobBase(BaseModel):
