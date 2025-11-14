@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.database import get_db
+from app.database import get_marketing_db
 from app.auth import get_api_key
 from app.domains.marketing.models import Campaign, CampaignStatus, CampaignObjective
 from app.domains.marketing.schemas import (
@@ -22,7 +22,7 @@ async def list_campaigns(
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     status: Optional[CampaignStatus] = Query(None, description="Filter by status"),
     objective: Optional[CampaignObjective] = Query(None, description="Filter by objective"),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """List all campaigns with pagination and filtering."""
@@ -45,7 +45,7 @@ async def list_campaigns(
 @router.get("/{campaign_id}", response_model=CampaignResponse)
 async def get_campaign(
     campaign_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """Get detailed campaign information."""

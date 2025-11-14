@@ -9,6 +9,7 @@ class Settings(BaseSettings):
 
     # Database
     DATABASE_URL: str = "postgresql://user:password@localhost:5432/car_repair_api"
+    MARKETING_DATABASE_URL: str = "postgresql://user:password@localhost:5432/marketing"
 
     # Security
     SECRET_KEY: str = "your-secret-key-here-change-in-production"

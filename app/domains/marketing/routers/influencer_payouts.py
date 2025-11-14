@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.database import get_db
+from app.database import get_marketing_db
 from app.auth import get_api_key
 from app.domains.marketing.models import InfluencerPayout, PayoutStatus
 from app.domains.marketing.schemas import (
@@ -22,7 +22,7 @@ async def list_influencer_payouts(
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     status: Optional[PayoutStatus] = Query(None, description="Filter by status"),
     influencer_id: Optional[int] = Query(None, description="Filter by influencer ID"),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """List all influencer payouts with pagination and filtering."""
@@ -45,7 +45,7 @@ async def list_influencer_payouts(
 @router.get("/{payout_id}", response_model=InfluencerPayoutResponse)
 async def get_influencer_payout(
     payout_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """Get detailed influencer payout information."""

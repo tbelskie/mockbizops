@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.database import get_db
+from app.database import get_marketing_db
 from app.auth import get_api_key
 from app.domains.marketing.models import PromoCode, PromoCodeUsage, PromoCodeStatus
 from app.domains.marketing.schemas import (
@@ -23,7 +23,7 @@ async def list_promo_codes(
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     status: Optional[PromoCodeStatus] = Query(None, description="Filter by status"),
     influencer_id: Optional[int] = Query(None, description="Filter by influencer ID"),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """List all promo codes with pagination and filtering."""
@@ -46,7 +46,7 @@ async def list_promo_codes(
 @router.get("/{promo_code_id}", response_model=PromoCodeResponse)
 async def get_promo_code(
     promo_code_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """Get detailed promo code information."""
@@ -66,7 +66,7 @@ async def get_promo_code_usage(
     promo_code_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """Get usage history for a specific promo code."""

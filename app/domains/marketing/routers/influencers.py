@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.database import get_db
+from app.database import get_marketing_db
 from app.auth import get_api_key
 from app.domains.marketing.models import Influencer, InfluencerStatus
 from app.domains.marketing.schemas import (
@@ -21,7 +21,7 @@ async def list_influencers(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     status: Optional[InfluencerStatus] = Query(None, description="Filter by status"),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """List all influencers with pagination and filtering."""
@@ -42,7 +42,7 @@ async def list_influencers(
 @router.get("/{influencer_id}", response_model=InfluencerResponse)
 async def get_influencer(
     influencer_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_marketing_db),
     api_key: str = Depends(get_api_key)
 ):
     """Get detailed influencer information."""
