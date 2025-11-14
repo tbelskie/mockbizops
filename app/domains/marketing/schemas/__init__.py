@@ -14,7 +14,10 @@ from app.domains.marketing.schemas.promo_code import (
     PromoCodeListResponse,
     PromoCodeUsageResponse
 )
-from app.domains.marketing.schemas.ad_insight import AdInsightResponse
+from app.domains.marketing.schemas.ad_insight import (
+    AdInsightResponse,
+    AdInsightListResponse
+)
 from app.domains.marketing.schemas.influencer_payout import (
     InfluencerPayoutResponse,
     InfluencerPayoutListResponse
@@ -31,6 +34,7 @@ __all__ = [
     "PromoCodeListResponse",
     "PromoCodeUsageResponse",
     "AdInsightResponse",
+    "AdInsightListResponse",
     "InfluencerPayoutResponse",
     "InfluencerPayoutListResponse",
 ]

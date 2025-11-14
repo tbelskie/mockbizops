@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse
 from app.config import settings
 from app.database import init_db
 from app.domains.auto_shop.routers import customers, vehicles, work_orders, parts, mechanics, admin, service_jobs
-from app.domains.marketing.routers import influencers, campaigns, promo_codes, influencer_payouts
+from app.domains.marketing.routers import influencers, campaigns, promo_codes, influencer_payouts, ad_insights
 
 # Initialize database tables
 init_db()
@@ -86,6 +86,7 @@ app.include_router(influencers.router, prefix=f"{settings.API_V1_PREFIX}/marketi
 app.include_router(campaigns.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
 app.include_router(promo_codes.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
 app.include_router(influencer_payouts.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
+app.include_router(ad_insights.router, prefix=f"{settings.API_V1_PREFIX}/marketing")
 
 
 @app.get("/", include_in_schema=False)
